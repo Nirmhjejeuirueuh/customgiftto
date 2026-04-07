@@ -1,0 +1,296 @@
+---
+const plans = [
+  {
+    name: "Basic",
+    desc: "Perfect for smaller teams & startups",
+    price: "$29",
+    billing: "Per user/month, billed monthly",
+    features: [
+      { text: "Standard Integrations", included: true },
+      { text: "Basic Analytics", included: true },
+      { text: "Storage Space", included: true },
+      { text: "Team Members", included: true },
+      { text: "Advanced Reports", included: false },
+    ],
+    cta: "START FREE TRIAL",
+    highlighted: false,
+  },
+  {
+    name: "Pro",
+    desc: "Perfect for smaller teams & startups",
+    price: "$79",
+    billing: "Per user/month, billed monthly",
+    features: [
+      { text: "Standard Integrations", included: true },
+      { text: "Basic Analytics", included: true },
+      { text: "Advanced Reports", included: true },
+      { text: "Storage Space", included: true },
+      { text: "Team Members", included: true },
+    ],
+    cta: "START FREE TRIAL",
+    highlighted: true,
+  },
+  {
+    name: "Enterprise",
+    desc: "Perfect for smaller teams & startups",
+    price: "$99",
+    billing: "Per user/month, billed monthly",
+    features: [
+      { text: "Standard Integrations", included: true },
+      { text: "Basic Analytics", included: true },
+      { text: "Advanced Reports", included: true },
+      { text: "Storage Space", included: true },
+      { text: "Team Members", included: true },
+    ],
+    cta: "CONTACT SALES",
+    highlighted: false,
+  },
+];
+---
+
+<section class="pricing section" id="pricing">
+  <div class="container">
+    <div class="pricing-top">
+      <div class="pricing-title-side">
+        <h2 class="section-title">Simple, Transparent <em>Pricing</em></h2>
+        <p class="section-desc" style="margin-top:16px;">
+          No hidden fees, no surprises — just clear, flexible pricing designed to help you manage your finances with confidence.
+        </p>
+      </div>
+      <div class="pricing-toggle">
+        <button class="toggle-btn active">MONTHLY</button>
+        <button class="toggle-btn">YEARLY</button>
+      </div>
+    </div>
+
+    <div class="pricing-grid">
+      {plans.map((plan) => (
+        <div class={`pricing-card ${plan.highlighted ? 'highlighted' : ''}`}>
+          <div class="pricing-card-inner">
+            <div class="plan-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 14l7-10 7 10" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="plan-name">{plan.name}</h3>
+            <p class="plan-desc">{plan.desc}</p>
+
+            <div class="plan-price-row">
+              <span class="plan-price">{plan.price}</span>
+            </div>
+            <p class="plan-billing">{plan.billing}</p>
+
+            <hr class="plan-divider" />
+
+            <p class="whats-included">What's Included:</p>
+            <ul class="plan-features">
+              {plan.features.map((f) => (
+                <li class={f.included ? '' : 'disabled'}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8l3.5 3.5L13 5" stroke={f.included ? '#4f46e5' : '#ccc'} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {f.text}
+                </li>
+              ))}
+            </ul>
+
+            <a href="/contact/" class={`btn-plan ${plan.highlighted ? 'btn-plan-filled' : 'btn-plan-outline'}`}>
+              {plan.cta}
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing {
+    background: var(--color-bg-section);
+  }
+
+  .pricing-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 60px;
+    gap: 40px;
+  }
+
+  .pricing-title-side {
+    max-width: 520px;
+  }
+
+  .pricing-toggle {
+    display: flex;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 4px;
+    flex-shrink: 0;
+  }
+
+  .toggle-btn {
+    padding: 10px 24px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: var(--radius-full);
+    color: var(--color-text-light);
+    transition: all 0.3s;
+    font-family: var(--font-primary);
+  }
+
+  .toggle-btn.active {
+    background: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .pricing-card {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all 0.3s;
+    padding-top: 4px;
+    position: relative;
+  }
+
+  .pricing-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #818cf8, #c4b5fd, #e9d5ff);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  .pricing-card.highlighted {
+    box-shadow: 0 20px 60px rgba(99, 102, 241, 0.12);
+  }
+
+  .pricing-card-inner {
+    padding: 36px 32px;
+  }
+
+  .plan-icon {
+    width: 44px;
+    height: 44px;
+    background: #fefce8;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .plan-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-bottom: 6px;
+  }
+
+  .plan-desc {
+    font-size: 14px;
+    color: var(--color-text-light);
+    margin-bottom: 24px;
+  }
+
+  .plan-price {
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--color-dark);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .plan-billing {
+    font-size: 13px;
+    color: var(--color-text-light);
+    margin-top: 8px;
+  }
+
+  .plan-divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 28px 0;
+  }
+
+  .whats-included {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: 20px;
+  }
+
+  .plan-features {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .plan-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .plan-features li.disabled {
+    color: var(--color-text-light);
+    opacity: 0.5;
+  }
+
+  .btn-plan {
+    display: block;
+    text-align: center;
+    padding: 16px;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+  }
+
+  .btn-plan-outline {
+    border: 1.5px solid var(--color-border);
+    color: var(--color-dark);
+  }
+
+  .btn-plan-outline:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  .btn-plan-filled {
+    background: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  .btn-plan-filled:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(79, 70, 229, 0.25);
+  }
+
+  @media (max-width: 900px) {
+    .pricing-top {
+      flex-direction: column;
+    }
+
+    .pricing-grid {
+      grid-template-columns: 1fr;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+  }
+</style>

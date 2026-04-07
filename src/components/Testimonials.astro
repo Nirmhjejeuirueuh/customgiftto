@@ -1,0 +1,137 @@
+---
+const testimonials = [
+  {
+    quote: "I saved $5,000 in just 6 months using Finzo. The automated budgeting feature changed my life!",
+    name: "Manio Jha",
+    role: "Freelance Designer",
+    avatar: "#6366f1",
+  },
+  {
+    quote: "The real-time reporting is incredible. I can see exactly where my money goes and make smarter decisions.",
+    name: "Sarah Chen",
+    role: "Marketing Director",
+    avatar: "#ec4899",
+  },
+  {
+    quote: "Best financial tool I've ever used. The team collaboration features are perfect for our small business.",
+    name: "James Walker",
+    role: "Startup Founder",
+    avatar: "#10b981",
+  },
+];
+---
+
+<section class="testimonials section">
+  <div class="container">
+    <div class="testimonials-header">
+      <span class="section-label">
+        <span class="label-dot"></span>
+        Testimonials
+      </span>
+      <h2 class="section-title">What our <em>users</em> say</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      {testimonials.map((t) => (
+        <div class="testimonial-card">
+          <div class="quote-stars">
+            {[...Array(5)].map(() => (
+              <svg width="16" height="16" viewBox="0 0 14 14" fill="#f59e0b"><path d="M7 0l2.2 4.4L14 5.1l-3.5 3.4.8 4.9L7 11.1 2.7 13.4l.8-4.9L0 5.1l4.8-.7z"/></svg>
+            ))}
+          </div>
+          <p class="quote-text">"{t.quote}"</p>
+          <div class="quote-author">
+            <div class="author-avatar" style={`background:${t.avatar};`}></div>
+            <div>
+              <span class="author-name">{t.name}</span>
+              <span class="author-role">{t.role}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    background: var(--color-white);
+  }
+
+  .testimonials-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .label-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .testimonial-card {
+    padding: 36px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: all 0.3s;
+  }
+
+  .testimonial-card:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+    transform: translateY(-4px);
+  }
+
+  .quote-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 20px;
+  }
+
+  .quote-text {
+    font-size: 16px;
+    color: var(--color-text);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .quote-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .author-name {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-dark);
+  }
+
+  .author-role {
+    font-size: 13px;
+    color: var(--color-text-light);
+  }
+
+  @media (max-width: 900px) {
+    .testimonials-grid {
+      grid-template-columns: 1fr;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  }
+</style>

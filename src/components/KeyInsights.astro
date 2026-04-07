@@ -1,0 +1,107 @@
+---
+
+---
+
+<section class="insights section">
+  <div class="container insights-grid">
+    <div class="insights-left">
+      <h2 class="section-title">Key Insights Track Your Financial <em>System</em></h2>
+      <p class="section-desc">Effortlessly Manage, and Optimize Your Personal and Business Finances. Your Comprehensive Companion.</p>
+      <a href="/contact/" class="btn btn-primary" style="margin-top:32px;">GET THE APP NOW</a>
+    </div>
+
+    <div class="insights-right">
+      <div class="insight-card">
+        <div class="insight-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-light)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <span class="insight-label">Satisfaction</span>
+        <span class="insight-value">80%</span>
+        <span class="insight-sub">of Users</span>
+        <p class="insight-desc">Improved their savings within the first three months.</p>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-icon" style="background:#ecfdf5;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-light)" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+        </div>
+        <span class="insight-label">Feedbacks</span>
+        <span class="insight-value">500k</span>
+        <span class="insight-sub">reviews</span>
+        <p class="insight-desc">Highlighting our app's effectiveness and ease of use.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .insights {
+    background: var(--color-white);
+  }
+
+  .insights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .insights-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .insight-card {
+    background: var(--color-bg-section);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+  }
+
+  .insight-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--color-bg-section);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .insight-label {
+    display: block;
+    font-size: 13px;
+    color: var(--color-text-light);
+    margin-bottom: 8px;
+  }
+
+  .insight-value {
+    display: block;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--color-dark);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .insight-sub {
+    display: block;
+    font-size: 16px;
+    color: var(--color-text-light);
+    margin-bottom: 16px;
+  }
+
+  .insight-desc {
+    font-size: 14px;
+    color: var(--color-text-light);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .insights-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

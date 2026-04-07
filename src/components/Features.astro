@@ -1,0 +1,114 @@
+---
+const features = [
+  {
+    icon: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="6" width="20" height="16" rx="2" stroke="#4f46e5" stroke-width="1.5"/><path d="M4 10h20" stroke="#4f46e5" stroke-width="1.5"/></svg>`,
+    title: "Financial Management",
+    desc: "Easily manage all your financial accounts, budgets, and expenses in one intuitive."
+  },
+  {
+    icon: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4v20M4 14h20" stroke="#4f46e5" stroke-width="1.5" stroke-linecap="round"/><rect x="6" y="6" width="16" height="16" rx="8" stroke="#4f46e5" stroke-width="1.5"/></svg>`,
+    title: "Enhanced Financial Security",
+    desc: "Your data and money are always protected with real-time fraud detection."
+  },
+  {
+    icon: `<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M6 20l5-6 4 3 7-9" stroke="#4f46e5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    title: "Personalized Insights",
+    desc: "Get AI-driven insights tailored to your financial habits. Receive recommendations."
+  }
+];
+---
+
+<section class="control-section section">
+  <div class="container">
+    <div class="control-header">
+      <h2 class="section-title">Take Full Control Of <em>Your Finances</em></h2>
+      <p class="section-desc" style="margin:0 auto; text-align:center; max-width:560px;">
+        Manage, protect, and optimize your money effortlessly. Our intelligent financial tools bring clarity.
+      </p>
+    </div>
+
+    <div class="control-grid">
+      {features.map((f) => (
+        <div class="control-card">
+          <div class="control-icon" set:html={f.icon}></div>
+          <h3 class="control-title">{f.title}</h3>
+          <p class="control-desc">{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .control-section {
+    background: var(--color-white);
+  }
+
+  .control-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .control-header .section-desc {
+    margin-top: 16px;
+  }
+
+  .control-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .control-card {
+    padding: 36px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .control-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 24px;
+    right: 24px;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  .control-card:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.05);
+    transform: translateY(-4px);
+  }
+
+  .control-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-section);
+    border-radius: var(--radius-md);
+    margin-bottom: 24px;
+  }
+
+  .control-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: 12px;
+  }
+
+  .control-desc {
+    font-size: 15px;
+    color: var(--color-text-light);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .control-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
