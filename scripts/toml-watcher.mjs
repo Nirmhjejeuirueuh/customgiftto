@@ -32,12 +32,16 @@ console.log("[toml-watcher] Initial generation...");
 convertTomlToJson();
 
 /**
- * Watch TOML file for changes
+ * Watch TOML file for changes (only in dev mode)
  */
-console.log(`[toml-watcher] 👀 Watching ${configFilePath} for changes...`);
-fs.watch(configFilePath, (eventType) => {
-  if (eventType === "change") {
-    console.log("[toml-watcher] TOML file changed. Regenerating...");
-    convertTomlToJson();
-  }
-});
+if (process.argv.includes("--watch")) {
+  console.log(`[toml-watcher] 👀 Watching ${configFilePath} for changes...`);
+  fs.watch(configFilePath, (eventType) => {
+    if (eventType === "change") {
+      console.log("[toml-watcher] TOML file changed. Regenerating...");
+      convertTomlToJson();
+    }
+  });
+} else {
+  console.log("[toml-watcher] Watch mode disabled.");
+}
