@@ -1,6 +1,6 @@
 ---
-enable: true # Control the visibility of this section across all pages where it is used
-title: "The Future of Finance, **Explained**"
-description: "Explore expert insights, financial tips, and fintech trends <br /> to help you make smarter decisions."
+enable: true
+title: "Latest Gift **Guides**"
+description: "Explore our newest curated gift guides — handpicked <br /> to help you find the perfect present."
 limit: 3
 ---

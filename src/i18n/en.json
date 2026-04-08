@@ -1,37 +1,37 @@
 {
   "common": {
-    "readMore": "Read More Details",
+    "readMore": "Read Full Guide",
     "category": "Category",
-    "emailPlaceholder": "Email Address",
+    "emailPlaceholder": "Your Email Address",
     "paginationNext": "Next",
     "paginationPrevious": "Previous",
-    "contactDropdownSearch404": "No results wewe found",
+    "contactDropdownSearch404": "No results found",
     "404Heading": "404 - Page Not Found",
-    "404Description": "Oh dear, it seems like you've ventured off the map.",
-    "404ButtonLabel": "Go Back to Home"
+    "404Description": "Oops! Looks like this gift got lost in the mail.",
+    "404ButtonLabel": "Back to Gift Guides"
   },
   "navigation": {
-    "buttonLabel": "Download"
+    "buttonLabel": "Subscribe"
   },
   "contactInfo": {
     "locationLabel": "Location",
-    "location": "2627 Park Street, San Francisco, CA",
+    "location": "New York, NY",
     "phoneLabel": "Phone Number",
-    "phone": "925-465-3762",
+    "phone": "555-GIFT-2-GO",
     "emailLabel": "Email",
-    "email": "finzo@example.com"
+    "email": "hello@customgiftto.com"
   },
   "subscription": {
-    "title": "Join Our Newsletter",
-    "description": "Subscribe to our newsletter to receive the latest updates, new theme releases."
+    "title": "Get Gift Ideas Weekly",
+    "description": "Subscribe to receive curated gift guides, trending picks, and seasonal inspiration."
   },
   "integration": {
-    "relatedIntegrationSectionTitle": "You might be **interested in**",
+    "relatedIntegrationSectionTitle": "You might also **like**",
     "backToIntegration": "Browse"
   },
   "footerBlock": {
-    "description": "We provide seamless solutions to Small and Medium Businesses.",
-    "copyright": "Copyright © 2024 Finzo. All Rights Reserved.",
-    "contactBlockLabel": "Contact"
+    "description": "Your trusted source for curated gift guides. We help you find the perfect present for every person and every occasion.",
+    "copyright": "Copyright © 2026 Custom Gift To. All Rights Reserved.",
+    "contactBlockLabel": "Get in Touch"
   }
 }

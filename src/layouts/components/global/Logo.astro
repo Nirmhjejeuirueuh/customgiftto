@@ -55,11 +55,11 @@ let {
         />
 
         {logoText && (
-          <span class="logo-text" set:html={markdownify(logoText)} />
+          <span class="logo-text" style="font-family: 'Georgia', 'Times New Roman', serif; font-style: italic;" set:html={markdownify(logoText)} />
         )}
       </>
     ) : logoText ? (
-      logoText
+      <span class="logo-text" style="font-family: 'Georgia', 'Times New Roman', serif; font-style: italic;" set:html={markdownify(logoText)} />
     ) : (
       title
     )

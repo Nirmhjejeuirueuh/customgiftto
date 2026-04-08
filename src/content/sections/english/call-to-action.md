@@ -1,7 +1,7 @@
 ---
 enable: true
-title: "Track your spending and invest wisely—all in one **easy-to-use app**"
-description: "Take control of your money with Finzo. Track your spending, save smartly, and invest wisely—all in one easy-to-use app."
+title: "Never miss the perfect gift — subscribe to our **weekly gift guide**"
+description: "Get curated gift ideas delivered straight to your inbox. Handpicked by our editors for every occasion, budget, and recipient."
 
 mobilePreview: "/images/home-banner/finzo-mobile-preview.jpg" # image dimensions: 317x687
 mobileFrame: "/images/home-banner/mobile-frame.png"
@@ -9,18 +9,18 @@ background: "/images/cta-bg.jpg"
 shape: "/images/call-to-action-shape.png"
 
 stats:
-  title: "500K+"
-  description: "Well-reviewed by <br /> customers"
-  avatars: # If you dont want to show avatars, just comment out or remove this
+  title: "250K+"
+  description: "Happy gift <br /> givers"
+  avatars:
     - "/images/customers/avatar/1.jpg"
     - "/images/customers/avatar/2.jpg"
     - "/images/customers/avatar/3.jpg"
 
 button:
   enable: true
-  label: GET A FREE DEMO
+  label: SUBSCRIBE NOW
   url: /contact/
   rel: ""
   target: ""
-  hoverEffect: "text-flip" # "text-flip", "creative-fill", "magnetic", "magnetic-text-flip"
+  hoverEffect: "text-flip"
 ---

@@ -2,260 +2,219 @@
   "main": [
     {
       "enable": true,
-      "name": "Home",
-      "weight": 0,
-      "url": ""
-    },
-    {
-      "enable": true,
-      "name": "Features",
-      "weight": 0,
-      "hasMegaMenu": true,
-      "cta": {
-        "enable": true,
-        "image": "/images/menu-cta.png",
-        "title": "Gain Actionable Insights",
-        "description": "Launch faster, grow smarter, and scale effortlessly.",
-        "button": {
-          "enable": true,
-          "hoverEffect": "text-flip",
-          "hoverEffect_comment": "text-flip, creative-fill, magnetic, magnetic-text-flip",
-          "label": "Get A Free Trial",
-          "url": "/contact/",
-          "rel": "",
-          "target": ""
-        }
-      },
-      "menus": [
-        {
-          "enable": true,
-          "children": [
-            {
-              "enable": true,
-              "icon": "Focus",
-              "name": "Real-Time Reporting",
-              "description": "Monitor live data streams.",
-              "url": "/features/"
-            },
-            {
-              "enable": true,
-              "icon": "Shield",
-              "name": "Seamless Collaboration",
-              "description": "Keep your team aligned.",
-              "url": "/features/"
-            },
-            {
-              "enable": true,
-              "icon": "Database",
-              "name": "Satisfaction Metrics",
-              "description": "Keep track of your users satisfaction.",
-              "url": "/features/"
-            },
-            {
-              "enable": true,
-              "icon": "Clock",
-              "name": "Smart Automation Hub",
-              "description": "Get everything done with AI tools.",
-              "url": "/features/"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Pages",
-      "enable": true,
-      "weight": 0,
+      "name": "By Age",
+      "weight": 1,
       "hasChildren": true,
       "children": [
         {
           "enable": true,
-          "name": "About",
-          "url": "/about/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Features",
-          "url": "/features/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Pricing",
-          "url": "/pricing/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Nested Menu",
-          "hasChildren": true,
-          "weight": 0,
-          "children": [
-            {
-              "enable": true,
-              "name": "Menu 01",
-              "weight": 0
-            },
-            {
-              "enable": true,
-              "name": "Nested Menu",
-              "hasChildren": true,
-              "weight": 0,
-              "children": [
-                {
-                  "enable": true,
-                  "name": "Nested Menu Item",
-                  "weight": 0
-                },
-                {
-                  "enable": true,
-                  "name": "Nested Menu Item",
-                  "weight": 0
-                },
-                {
-                  "enable": true,
-                  "name": "Nested Menu Item",
-                  "weight": 0
-                },
-                {
-                  "enable": true,
-                  "name": "Nested Menu Item",
-                  "weight": 0
-                }
-              ]
-            },
-            {
-              "enable": true,
-              "name": "Menu 02",
-              "weight": 0
-            },
-            {
-              "enable": true,
-              "name": "Menu 03",
-              "weight": 0
-            }
-          ]
-        },
-        {
-          "enable": true,
-          "name": "Testimonial",
-          "url": "/testimonial/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Changelog",
-          "url": "/changelog/",
-          "weight": 0,
-          "badge": {
-            "enable": true,
-            "label": "NEW",
-            "color": "accent",
-            "_color_comment": "color expected value - accent, info, success, danger, dark",
-            "type": "text",
-            "_type_comment": "type expected value - text, dot"
-          }
-        },
-        {
-          "enable": true,
-          "name": "Integration",
-          "url": "/integration/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Integration Single",
-          "url": "/integration/discord/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Blog",
+          "name": "Gifts for 1-Year-Olds",
           "url": "/blog/",
           "weight": 0
         },
         {
           "enable": true,
-          "name": "Blog Single",
-          "url": "/blog/post-1/",
+          "name": "Gifts for 3-Year-Olds",
+          "url": "/blog/",
           "weight": 0
         },
         {
           "enable": true,
-          "name": "Terms & Conditions",
-          "url": "/terms-conditions/",
+          "name": "Gifts for 5-Year-Olds",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Gifts for 7-Year-Olds",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Gifts for 10-Year-Olds",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Gifts for Teens",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Gifts for 21-Year-Olds",
+          "url": "/blog/",
           "weight": 0
         }
       ]
     },
     {
       "enable": true,
-      "name": "Components",
-      "url": "/components/",
-      "weight": 0,
-      "badge": {
-        "enable": true,
-        "label": "NEW",
-        "color": "accent",
-        "_color_comment": "color expected value - accent, info, success, danger, dark",
-        "type": "text",
-        "_type_comment": "type expected value - text, dot"
-      }
+      "name": "By Occasion",
+      "weight": 2,
+      "hasChildren": true,
+      "children": [
+        {
+          "enable": true,
+          "name": "Birthday Gifts",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Wedding Gifts",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Graduation Gifts",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Housewarming Gifts",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Anniversary Gifts",
+          "url": "/blog/",
+          "weight": 0
+        }
+      ]
     },
     {
       "enable": true,
-      "name": "Contact",
-      "url": "/contact/",
-      "weight": 0,
-      "badge": {
-        "enable": true,
-        "label": "NEW",
-        "color": "accent",
-        "_color_comment": "color expected value - accent, info, success, danger, dark",
-        "type": "dot",
-        "_type_comment": "type expected value - text, dot"
-      }
+      "name": "By Recipient",
+      "weight": 3,
+      "hasChildren": true,
+      "children": [
+        {
+          "enable": true,
+          "name": "Gifts for Her",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Gifts for Him",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Gifts for Mom",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Gifts for Dad",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Gifts for Grandma",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Gifts for Kids",
+          "url": "/blog/",
+          "weight": 0
+        }
+      ]
+    },
+    {
+      "enable": true,
+      "name": "For Anytime",
+      "url": "/blog/",
+      "weight": 4
+    },
+    {
+      "enable": true,
+      "name": "By Holiday",
+      "weight": 5,
+      "hasChildren": true,
+      "children": [
+        {
+          "enable": true,
+          "name": "Christmas Gifts",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Valentine's Day",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Mother's Day",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Father's Day",
+          "url": "/blog/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Easter Gifts",
+          "url": "/blog/",
+          "weight": 0
+        }
+      ]
+    },
+    {
+      "enable": true,
+      "name": "About Us",
+      "url": "/about/",
+      "weight": 6
     }
   ],
   "footer": [
     {
-      "label": "Services",
+      "label": "Gift Guides",
       "list": [
         {
           "enable": true,
-          "name": "Cards",
-          "url": "/",
+          "name": "By Age",
+          "url": "/blog/",
           "weight": 0
         },
         {
           "enable": true,
-          "name": "Accounts",
-          "url": "/",
+          "name": "By Occasion",
+          "url": "/blog/",
           "weight": 0
         },
         {
           "enable": true,
-          "name": "FAQs",
-          "url": "/",
+          "name": "By Recipient",
+          "url": "/blog/",
           "weight": 0
         },
         {
           "enable": true,
-          "name": "Branches",
-          "url": "/",
+          "name": "For Anytime",
+          "url": "/blog/",
           "weight": 0
         },
         {
           "enable": true,
-          "name": "Finance",
-          "url": "/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Investments",
-          "url": "/",
+          "name": "By Holiday",
+          "url": "/blog/",
           "weight": 0
         }
       ]
@@ -265,38 +224,32 @@
       "list": [
         {
           "enable": true,
-          "name": "About",
-          "url": "/company/",
+          "name": "About Us",
+          "url": "/about/",
           "weight": 0
         },
         {
           "enable": true,
           "name": "Blog",
-          "url": "/career/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Press",
           "url": "/blog/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Media",
-          "url": "/",
-          "weight": 0
-        },
-        {
-          "enable": true,
-          "name": "Careers",
-          "url": "/",
           "weight": 0
         },
         {
           "enable": true,
           "name": "Contact",
           "url": "/contact/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Privacy Policy",
+          "url": "/privacy-policy/",
+          "weight": 0
+        },
+        {
+          "enable": true,
+          "name": "Terms & Conditions",
+          "url": "/terms-conditions/",
           "weight": 0
         }
       ]

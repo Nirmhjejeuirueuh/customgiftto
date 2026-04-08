@@ -1,0 +1,66 @@
+---
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import { plainify } from "@/lib/utils/textConverter";
+import { getLocaleUrlCTM } from "@/lib/utils/i18nUtils";
+import config from ".astro/config.generated.json" with { type: "json" };
+
+const { blogFolder } = config.settings;
+let posts = await getCollectionCTM(blogFolder as "blog", Astro.currentLocale);
+posts = sortByDate(posts);
+
+const featuredPost = posts[0];
+const slug = getLocaleUrlCTM(featuredPost.id, Astro.currentLocale, featuredPost.collection);
+---
+
+<section class="pt-6 pb-10 md:pt-10 md:pb-16">
+  <div class="container">
+    <!-- Section Title -->
+    <div class="mb-8 text-center">
+      <h1 class="font-serif text-5xl font-normal italic md:text-6xl lg:text-7xl" style="font-family: 'Georgia', 'Times New Roman', serif;">
+        Gift Guides
+      </h1>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="mb-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 border-y border-gray-300 py-3">
+      <a href="/blog/" class="text-sm font-bold uppercase tracking-wider text-gray-800 hover:text-primary transition-colors">By Age</a>
+      <a href="/blog/" class="text-sm font-bold uppercase tracking-wider text-gray-800 hover:text-primary transition-colors">By Occasion</a>
+      <a href="/blog/" class="text-sm font-bold uppercase tracking-wider text-gray-800 hover:text-primary transition-colors">By Recipient</a>
+      <a href="/blog/" class="text-sm font-bold uppercase tracking-wider text-gray-800 hover:text-primary transition-colors">For Anytime</a>
+      <a href="/blog/" class="text-sm font-bold uppercase tracking-wider text-gray-800 hover:text-primary transition-colors">By Holiday</a>
+      <a href="/about/" class="text-sm font-bold uppercase tracking-wider text-gray-800 hover:text-primary transition-colors">About Us</a>
+    </nav>
+
+    <!-- Featured Article -->
+    {featuredPost && (
+      <div class="grid items-center gap-8 md:grid-cols-2">
+        <a href={slug} class="group overflow-hidden rounded-lg">
+          {featuredPost.data.image && (
+            <OptimizedImage
+              src={featuredPost.data.image}
+              width={800}
+              height={500}
+              alt={plainify(featuredPost.data.title || "")}
+              class="h-[300px] w-full object-cover transition duration-500 group-hover:scale-105 md:h-[400px]"
+            />
+          )}
+        </a>
+        <div class="space-y-4">
+          <span class="text-xs font-bold uppercase tracking-widest text-gray-500">
+            {featuredPost.data.categories?.[0] || "Gift Guide"}
+          </span>
+          <h2 class="text-2xl font-bold leading-tight text-gray-900 md:text-3xl lg:text-4xl">
+            <a href={slug} class="hover:text-primary transition-colors">
+              {plainify(featuredPost.data.title || "")}
+            </a>
+          </h2>
+          {featuredPost.data.excerpt && (
+            <p class="text-lg text-gray-600">{featuredPost.data.excerpt}</p>
+          )}
+        </div>
+      </div>
+    )}
+  </div>
+</section>

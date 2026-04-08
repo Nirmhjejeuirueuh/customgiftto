@@ -5,18 +5,18 @@
   --leading-inherit: inherit;
 
   /* Colors */
-  --color-primary: #0031F4;
-  --color-secondary: #9ECF59;
-  --color-tertiary: #94E4F1;
-  --color-accent: #6366F1;
+  --color-primary: #E45B2B;
+  --color-secondary: #7ECEC1;
+  --color-tertiary: #F5C75D;
+  --color-accent: #D4436A;
   --color-body: #fff;
-  --color-border-light: #ECEEF1;
-  --color-theme-light: #FAFAFA;
-  --color-theme-dark: #372D3F;
-  
-  --color-text-default: #3B3B3B;
-  --color-dark: #322B2B; /* Heading colors */
-  --color-light: #fff6f6;
+  --color-border-light: #E8E8E8;
+  --color-theme-light: #FAF9F7;
+  --color-theme-dark: #2D2D2D;
+
+  --color-text-default: #333333;
+  --color-dark: #1A1A1A; /* Heading colors */
+  --color-light: #FFFAF5;
 
   /* Screen */
   --breakpoint-*: initial;

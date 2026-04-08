@@ -1,0 +1,80 @@
+---
+/**
+ * "More Gift Guides" section - horizontal scrollable cards
+ * Inspired by Today.com's "More gift guides" carousel section
+ */
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import { plainify } from "@/lib/utils/textConverter";
+import { getLocaleUrlCTM } from "@/lib/utils/i18nUtils";
+import CustomButton from "@/components/CustomButton.astro";
+import config from ".astro/config.generated.json" with { type: "json" };
+
+const { blogFolder } = config.settings;
+let posts = await getCollectionCTM(blogFolder as "blog", Astro.currentLocale);
+posts = sortByDate(posts);
+
+// Get a selection of posts for the carousel
+const guidePosts = posts.slice(0, 8);
+---
+
+<section class="py-10 md:py-14">
+  <div class="container">
+    <h2 class="mb-8 text-3xl font-normal italic md:mb-10 md:text-4xl lg:text-5xl" style="font-family: 'Georgia', 'Times New Roman', serif;">
+      <span class="relative inline-block">
+        More gift guides
+        <span class="absolute -bottom-1 left-0 h-2.5 w-full bg-secondary/40"></span>
+      </span>
+    </h2>
+
+    <!-- Card Carousel -->
+    <div class="scrollbar-hide -mx-4 flex gap-5 overflow-x-auto px-4 pb-6">
+      {guidePosts.map((post) => (
+        <a
+          href={getLocaleUrlCTM(post.id, Astro.currentLocale, post.collection)}
+          class="group min-w-[240px] max-w-[280px] flex-shrink-0"
+        >
+          <div class="overflow-hidden rounded-lg">
+            {post.data.image && (
+              <OptimizedImage
+                src={post.data.image}
+                width={400}
+                height={300}
+                alt={plainify(post.data.title || "")}
+                class="h-[180px] w-full object-cover transition duration-500 group-hover:scale-105"
+              />
+            )}
+          </div>
+          <p class="mt-1 text-xs text-gray-400">
+            {post.data.author || "Custom Gift To"}
+          </p>
+          <h3 class="mt-1 text-sm font-bold leading-snug text-gray-900 group-hover:text-primary transition-colors">
+            {plainify(post.data.title || "")}
+          </h3>
+        </a>
+      ))}
+    </div>
+
+    <!-- See All Button -->
+    <div class="mt-6 text-right">
+      <CustomButton
+        variant="outline"
+        hoverEffect="text-flip"
+        label="SEE ALL"
+        url="/blog/"
+        class="btn-sm"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>

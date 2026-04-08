@@ -1,0 +1,52 @@
+---
+/**
+ * Latest articles in a horizontal list layout (image left, text right)
+ * Inspired by Today.com's bottom article listing
+ */
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import { plainify } from "@/lib/utils/textConverter";
+import { getLocaleUrlCTM } from "@/lib/utils/i18nUtils";
+import config from ".astro/config.generated.json" with { type: "json" };
+
+const { blogFolder } = config.settings;
+let posts = await getCollectionCTM(blogFolder as "blog", Astro.currentLocale);
+posts = sortByDate(posts);
+
+// Get latest posts (skip first few that are used in other sections)
+const latestPosts = posts.slice(3, 9);
+---
+
+<section class="border-t border-gray-200 py-10 md:py-14">
+  <div class="container">
+    <div class="space-y-0 divide-y divide-gray-200">
+      {latestPosts.map((post) => (
+        <a
+          href={getLocaleUrlCTM(post.id, Astro.currentLocale, post.collection)}
+          class="group flex items-start gap-5 py-6"
+        >
+          {post.data.image && (
+            <div class="w-36 flex-shrink-0 overflow-hidden rounded-lg md:w-48">
+              <OptimizedImage
+                src={post.data.image}
+                width={300}
+                height={200}
+                alt={plainify(post.data.title || "")}
+                class="h-24 w-full object-cover transition duration-500 group-hover:scale-105 md:h-32"
+              />
+            </div>
+          )}
+          <div class="flex flex-col justify-center">
+            <h3 class="text-base font-bold leading-snug text-gray-900 group-hover:text-primary transition-colors md:text-lg">
+              {plainify(post.data.title || "")}
+            </h3>
+            {post.data.excerpt && (
+              <p class="mt-1 hidden text-sm text-gray-500 md:block">{post.data.excerpt}</p>
+            )}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

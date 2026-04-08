@@ -1,0 +1,108 @@
+---
+/**
+ * Reusable gift category section (e.g., "Shop for gifts by age", "Gifts for her", "Gifts for him", etc.)
+ * Inspired by Today.com's category sections with a featured article + sub-articles grid
+ */
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import { plainify } from "@/lib/utils/textConverter";
+import { getLocaleUrlCTM } from "@/lib/utils/i18nUtils";
+import config from ".astro/config.generated.json" with { type: "json" };
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  links?: { name: string; url: string }[];
+  category?: string;
+  startIndex?: number;
+  limit?: number;
+  class?: string;
+}
+
+const { title, subtitle, links, category, startIndex = 0, limit = 5, class: className } = Astro.props;
+
+const { blogFolder } = config.settings;
+let posts = await getCollectionCTM(blogFolder as "blog", Astro.currentLocale);
+posts = sortByDate(posts);
+
+// Filter by category if specified
+if (category) {
+  posts = posts.filter((post) =>
+    post.data.categories?.some((cat: string) => cat.toLowerCase() === category.toLowerCase())
+  );
+}
+
+// Slice posts for this section
+posts = posts.slice(startIndex, startIndex + limit);
+
+const featuredPost = posts[0];
+const subPosts = posts.slice(1);
+---
+
+<section class:list={["py-10 md:py-14", className]}>
+  <div class="container">
+    <!-- Section Title with highlight -->
+    <div class="mb-8 md:mb-12">
+      <h2 class="mb-4 text-3xl font-normal italic md:text-4xl lg:text-5xl" style="font-family: 'Georgia', 'Times New Roman', serif;">
+        <span class="relative inline-block">
+          {title}
+          <span class="absolute -bottom-1 left-0 h-2.5 w-full bg-secondary/40"></span>
+        </span>
+      </h2>
+      
+      {subtitle && (
+        <p class="max-w-2xl text-lg font-bold leading-tight text-gray-900 md:text-xl">{subtitle}</p>
+      )}
+
+      {links && links.length > 0 && (
+        <nav class="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-gray-200 pt-4">
+          {links.map((link) => (
+            <a 
+              href={link.url} 
+              class="text-sm font-bold uppercase tracking-widest text-gray-500 hover:text-primary transition-colors"
+            >
+              {link.name}
+            </a>
+          ))}
+        </nav>
+      )}
+    </div>
+
+    <!-- Featured Article + Description -->
+    {featuredPost && (
+      <div class="grid items-start gap-8 md:grid-cols-2">
+        <a
+          href={getLocaleUrlCTM(featuredPost.id, Astro.currentLocale, featuredPost.collection)}
+          class="group overflow-hidden rounded-lg"
+        >
+          {featuredPost.data.image && (
+            <OptimizedImage
+              src={featuredPost.data.image}
+              width={800}
+              height={500}
+              alt={plainify(featuredPost.data.title || "")}
+              class="h-[280px] w-full object-cover transition duration-500 group-hover:scale-105 md:h-[380px]"
+            />
+          )}
+        </a>
+        <div class="flex flex-col justify-center space-y-3">
+          <span class="text-xs font-bold uppercase tracking-widest text-gray-500">
+            {featuredPost.data.categories?.[0] || "Gift Guide"}
+          </span>
+          <h3 class="text-xl font-bold leading-tight text-gray-900 md:text-2xl lg:text-3xl">
+            <a
+              href={getLocaleUrlCTM(featuredPost.id, Astro.currentLocale, featuredPost.collection)}
+              class="hover:text-primary transition-colors"
+            >
+              {plainify(featuredPost.data.title || "")}
+            </a>
+          </h3>
+          {featuredPost.data.excerpt && (
+            <p class="text-base text-gray-600">{featuredPost.data.excerpt}</p>
+          )}
+        </div>
+      </div>
+    )}
+  </div>
+</section>

@@ -6,26 +6,29 @@
     @apply sticky top-6 z-50 transition-[transform,opacity,0.3s_background] duration-500;
   }
 
-  &.scroll-up {
-    .hs-dropdown-menu.mega-menu {
-      @apply pointer-events-auto;
-    }
-  }
-
   &.scroll-down,
   &.scroll-up {
+    @apply flex justify-center sticky top-2;
+
     > .container {
-      @apply lg:max-w-5xl!;
+      /* Use a slightly wider max-width and squeeze contents to fit neatly */
+      @apply max-w-[1250px]! mx-auto px-4;
     }
 
     > .container > nav {
-      @apply rounded-full border bg-white/70 px-2 py-2.5 backdrop-blur-md;
+      @apply w-full rounded-full border bg-white/70 px-5 py-2 backdrop-blur-md lg:px-6;
     }
 
     .nav-item {
       > .nav-link {
-        @apply lg:px-4 lg:py-2 xl:px-4;
+        /* Reduce link spacing when collapsed */
+        @apply lg:px-2.5 lg:py-2 xl:px-3.5;
       }
+    }
+
+    /* Slightly shrink the button to fit the container */
+    .btn-primary {
+      @apply scale-95 origin-right;
     }
   }
 
@@ -55,7 +58,8 @@
   }
 
   .logo-text {
-    @apply text-h5 font-normal tracking-wider;
+    @apply text-h5 font-normal tracking-wider italic whitespace-nowrap;
+    font-family: 'Georgia', 'Times New Roman', serif;
   }
 }
 
@@ -76,7 +80,8 @@ header {
 footer {
   .logo-wrapper {
     .logo-text {
-      @apply text-h4 text-dark font-medium;
+      @apply text-h4 text-dark font-medium italic;
+      font-family: 'Georgia', 'Times New Roman', serif;
     }
 
     &.logo-alternate {
@@ -119,7 +124,7 @@ footer {
   .nav-item {
     @apply relative;
     > .nav-link {
-      @apply flex items-center rounded-full px-3 py-1.5 font-normal transition-all duration-300 sm:px-6 lg:px-4 lg:py-2 xl:px-6;
+      @apply flex items-center rounded-full px-3 py-1.5 font-normal whitespace-nowrap transition-all duration-300 sm:px-4 lg:px-3 lg:py-2 xl:px-4;
     }
   }
 
