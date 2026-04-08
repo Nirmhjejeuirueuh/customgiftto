@@ -1,0 +1,122 @@
+---
+import type { z } from "astro:schema";
+import type { Section } from "@/types";
+import Icons from "@/helpers/Icons.astro";
+import CustomButton from "../CustomButton.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import type { featuresSectionThreeSchema } from "@/sections.schema";
+
+// Type for this section data
+type sectionType = Section &
+  NonNullable<z.infer<typeof featuresSectionThreeSchema>>;
+
+type Props = {
+  content?: sectionType;
+};
+
+// Fetching the default content for the this section
+let defaultContent = (
+  await getEntryCTM("sections", "features-section-four", Astro.currentLocale)
+)?.data as sectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as sectionType;
+
+// Extracting required values from 'content' object
+let { enable = true, items } = actualContent as sectionType;
+
+if (!enable) return;
+---
+
+<section>
+  <div class="container space-y-20">
+    {
+      items.map((item, index) => (
+        <div
+          class:list={[
+            "mx-auto grid max-w-6xl grid-cols-1 place-items-center gap-10 md:gap-20 lg:grid-cols-2",
+            item.imagePosition === "right" && "lg:*:first:order-2",
+            item.imagePosition === "right"
+              ? "justify-items-end"
+              : "justify-items-start",
+          ]}>
+          <div
+            data-aos={index % 2 === 0 ? "fade-left-sm" : "fade-right-sm"}
+            data-aos-delay={index % 2 === 0 ? 200 : 250}
+            class="relative flex items-center justify-center overflow-hidden rounded-2xl px-7 py-5 md:px-14 md:py-10">
+            <OptimizedImage
+              src={item.image}
+              alt={item.title}
+              height={item.imageHeight || 600}
+              class="rounded-2xl"
+            />
+
+            {/* Gradient Backgrounds */}
+            <div class="absolute inset-0 -z-10">
+              <div class="absolute -top-12 -left-16 h-38.75 w-38.75 bg-linear-to-r from-teal-100 via-lime-300 to-teal-100 opacity-60 blur-[100px]" />
+              <div class="absolute top-102.75 left-6 h-38.75 w-38.75 bg-linear-to-r from-lime-100 via-teal-300 to-lime-100 blur-[100px]" />
+              <div class="absolute top-73.25 left-107.25 h-38.75 w-38.75 bg-linear-to-r from-teal-200 via-lime-300 to-teal-100 opacity-50 blur-[100px]" />
+              <div class="absolute -top-12 right-0 h-38.75 w-38.75 bg-linear-to-r from-teal-200 via-teal-500 to-teal-100 opacity-20 blur-[100px]" />
+            </div>
+          </div>
+
+          <div class="space-y-10">
+            {item.title && (
+              <div class="mb-5 space-y-4 md:mb-10">
+                <h2
+                  class="has-italic-text h3 capitalize"
+                  set:html={markdownify(item.title)}
+                />
+                {item.description && (
+                  <p set:html={markdownify(item.description)} />
+                )}
+              </div>
+            )}
+            {item.stats && (
+              <div class="flex gap-5">
+                {item.stats.map((stat) => (
+                  <div class="space-y-2 border-s border-dashed ps-5">
+                    {stat?.value && (
+                      <h3
+                        class="h6 font-medium"
+                        set:html={markdownify(stat?.value)}
+                      />
+                    )}
+                    {stat?.label && <p set:html={markdownify(stat?.label)} />}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {item.features && (
+              <ul class="space-y-4">
+                {item.features.map((feature) => (
+                  <li class="flex items-center gap-3">
+                    <div class="bg-primary/5 flex h-5 w-5 items-center justify-center rounded-full">
+                      <Icons
+                        class="text-primary stroke-3 text-xs"
+                        icon="Check"
+                      />
+                    </div>
+                    {feature && <span set:html={markdownify(feature)} />}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {item.button && <CustomButton {...item.button} />}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,147 @@
+---
+import "swiper/css";
+import type { TypeOf } from "astro:schema";
+import CustomButton from "../CustomButton.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import AnimatedText from "../widgets/AnimatedText.astro";
+import TestimonialCard from "../cards/TestimonialCard.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { testimonialSectionSchema } from "@/sections.schema";
+
+// Type
+export type TestimonialSectionType = TypeOf<typeof testimonialSectionSchema>;
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "testimonial-section", Astro.currentLocale)
+)?.data as TestimonialSectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as TestimonialSectionType;
+
+let {
+  enable = true,
+  title,
+  description,
+  button,
+  list,
+} = (actualContent as TestimonialSectionType) || {};
+
+const isGridLayout = Astro.props.content?.sectionLayout === "grid";
+
+if (!enable) return;
+---
+
+<section class="testimonial-section overflow-hidden">
+  <div class="container">
+    <div class:list={["space-y-10 md:space-y-16"]}>
+      <div
+        class:list={[
+          isGridLayout
+            ? "space-y-4 text-center"
+            : "flex flex-wrap gap-y-8 md:items-center md:justify-between",
+        ]}>
+        {
+          title && (
+            <AnimatedText
+              class="has-italic-text capitalize"
+              tag="h2"
+              delay={0.2}
+              stagger={0.09}
+              content={markdownify(title)}
+            />
+          )
+        }
+
+        <div class="space-y-6">
+          {
+            description && (
+              <AnimatedText
+                delay={0.2}
+                stagger={0.02}
+                content={markdownify(description)}
+              />
+            )
+          }
+          {
+            button && !isGridLayout && (
+              <div data-aos="fade-up-sm" data-aos-delay="300">
+                <CustomButton {...button} />
+              </div>
+            )
+          }
+        </div>
+      </div>
+
+      {
+        list && !isGridLayout && (
+          <div class="relative container overflow-hidden border-y py-4">
+            <div class="swiper swiper-testimonial max-w-xl overflow-visible!">
+              <div class="swiper-wrapper">
+                {list
+                  .filter((item) => item.enable !== false)
+                  .map((testimonial) => (
+                    <div class="swiper-slide h-auto! opacity-50 duration-300 [&.swiper-slide-active]:opacity-100">
+                      <TestimonialCard
+                        class="space-y-10 md:space-y-32"
+                        content={testimonial}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        )
+      }
+      {
+        list && isGridLayout && (
+          <div
+            data-aos="fade-up-sm"
+            data-aos-delay="300"
+            class="grid gap-5 md:grid-cols-2">
+            {list
+              .filter((item) => item.enable !== false)
+              .map((testimonial) => (
+                <TestimonialCard
+                  class="space-y-10 bg-white lg:space-y-32"
+                  content={testimonial}
+                />
+              ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <script>
+    import Swiper from "swiper";
+    import { Autoplay } from "swiper/modules";
+
+    const swiperTestimonial = document.querySelector(".swiper-testimonial");
+    const initSwiper = async () => {
+      new Swiper(".swiper-testimonial", {
+        modules: [Autoplay],
+        slidesPerView: "auto",
+        spaceBetween: 16,
+        speed: 1400,
+        centeredSlides: true,
+        autoplay: {
+          delay: 2000,
+          pauseOnMouseEnter: true,
+          disableOnInteraction: false,
+        },
+        grabCursor: true,
+      });
+    };
+
+    // Initialize when DOM is ready
+    if (document.readyState === "loading" && swiperTestimonial) {
+      document.addEventListener("DOMContentLoaded", initSwiper);
+    } else {
+      swiperTestimonial && initSwiper();
+    }
+  </script>
+</section>

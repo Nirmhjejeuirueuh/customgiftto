@@ -1,0 +1,127 @@
+---
+import type { Section } from "@/types";
+import type { TypeOf } from "astro:schema";
+import CustomButton from "../CustomButton.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import type { aboutSectionSchema } from "@/sections.schema";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+
+// Type
+type SectionType = Section & TypeOf<typeof aboutSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "about-us", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+let {
+  enable = true,
+  title,
+  description,
+  image,
+  ctaBlock,
+} = actualContent as SectionType;
+
+if (!enable) return;
+---
+
+<section class="overflow-hidden">
+  <div class="container space-y-16 md:space-y-32">
+    <div class="lg:grid lg:grid-cols-12">
+      <div
+        class="col-span-5 flex flex-col items-end justify-between space-y-10">
+        <div class="space-y-4 lg:pe-10">
+          {
+            title && (
+              <h1
+                data-aos="fade-down-sm"
+                class="h2"
+                set:html={markdownify(title)}
+              />
+            )
+          }
+          {
+            description && (
+              <p
+                data-aos="fade-down-sm"
+                data-aos-delay="200"
+                set:html={markdownify(description)}
+              />
+            )
+          }
+        </div>
+        {
+          ctaBlock && (
+            <div
+              data-aos="fade-up-sm"
+              data-aos-delay="300"
+              class="bg-theme-light relative z-10 mb-8 rounded-xl p-5 md:px-10 md:py-7 lg:-mr-16 lg:max-w-lg lg:pe-20">
+              {ctaBlock?.title && (
+                <h2 class="h4 mb-4" set:html={markdownify(ctaBlock.title)} />
+              )}
+              {ctaBlock?.description && (
+                <p class="mb-5" set:html={markdownify(ctaBlock.description)} />
+              )}
+
+              <CustomButton {...ctaBlock?.button} />
+
+              <svg
+                class="pointer-events-none absolute right-0 bottom-0 select-none"
+                width="151"
+                height="183"
+                viewBox="0 0 151 183"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_16965_12999)">
+                  <g opacity="0.25">
+                    <path
+                      d="M9.44881 160.53C8.98898 160.231 8.85866 159.616 9.15773 159.156C9.4568 158.696 10.072 158.566 10.5318 158.865L9.44881 160.53ZM10.5318 158.865L23.3035 167.171L22.2204 168.837L9.44881 160.53L10.5318 158.865ZM46.1863 166.579L100.612 127.028L101.78 128.635L47.354 168.186L46.1863 166.579ZM125.746 126.378L130.678 129.585L129.595 131.25L124.663 128.043L125.746 126.378ZM100.612 127.028C108.047 121.626 118.042 121.367 125.746 126.378L124.663 128.043C117.649 123.481 108.549 123.717 101.78 128.635L100.612 127.028ZM23.3035 167.171C30.3173 171.733 39.4178 171.498 46.1863 166.579L47.354 168.186C39.9198 173.588 29.9242 173.847 22.2204 168.837L23.3035 167.171Z"
+                      fill="#9ECF59"
+                    />
+                    <path
+                      d="M110.173 5.6643C109.713 5.36523 109.097 5.49579 108.798 5.95538C108.499 6.41498 108.63 7.03043 109.089 7.3295L110.173 5.6643ZM109.089 7.3295L121.735 15.5543L122.818 13.8891L110.173 5.6643L109.089 7.3295ZM130.431 36.9011L115.24 104.676L117.178 105.111L132.369 37.3356L130.431 36.9011ZM124.79 128.122L129.596 131.248L130.679 129.583L125.873 126.457L124.79 128.122ZM115.24 104.676C113.213 113.719 117.022 123.07 124.79 128.122L125.873 126.457C118.8 121.857 115.333 113.344 117.178 105.111L115.24 104.676ZM121.735 15.5543C128.809 20.1546 132.276 28.6673 130.431 36.9011L132.369 37.3356C134.396 28.2924 130.587 18.9419 122.818 13.8891L121.735 15.5543Z"
+                      fill="#9ECF59"
+                    />
+                    <path
+                      d="M59.0898 84.2083L107.936 115.977"
+                      stroke="#9ECF59"
+                      stroke-width="1.98643"
+                      stroke-linecap="round"
+                    />
+                  </g>
+                </g>
+                <defs>
+                  <clipPath id="clip0_16965_12999">
+                    <rect
+                      width="96.6722"
+                      height="182.75"
+                      fill="white"
+                      transform="matrix(0.838294 0.545219 0.545219 -0.838294 0 153.199)"
+                    />
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
+          )
+        }
+      </div>
+      <div class="col-span-7" data-aos="fade-up-sm" data-aos-delay="500">
+        {
+          image && (
+            <OptimizedImage class="rounded-xl" src={image} height={618} />
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

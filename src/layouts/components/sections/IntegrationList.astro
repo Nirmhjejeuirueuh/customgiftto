@@ -1,0 +1,29 @@
+---
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import IntegrationCard from "../cards/IntegrationCard.astro";
+import config from ".astro/config.generated.json";
+
+const { ...rest } = Astro.props;
+const integrations = await getCollectionCTM(
+  config.settings.integrationFolder as "integration",
+  Astro.currentLocale,
+);
+---
+
+<section class="pt-16" {...rest}>
+  <div class="container">
+    {
+      integrations && (
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {integrations.map((item) => (
+            <IntegrationCard
+              collection={item.collection}
+              slug={item.data.customSlug || item.id}
+              content={item.data}
+            />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

@@ -1,0 +1,72 @@
+---
+import Base from "@/layouts/Base.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import config from ".astro/config.generated.json" with { type: "json" };
+import { getCollectionCTM } from "@/lib/contentParser.astro";
+import CallToAction from "@/components/sections/CallToAction.astro";
+import IntegrationSingle from "@/components/IntegrationSingle.astro";
+import { supportedLanguages } from "@/lib/utils/i18nUtils";
+import PageHeader from "@/components/PageHeader.astro";
+
+export async function getStaticPaths() {
+  const paths = await Promise.all(
+    supportedLanguages.map(async (lang) => {
+      const { integrationFolder } = config.settings;
+      const { defaultLanguage, showDefaultLangInUrl } =
+        config.settings.multilingual;
+
+      const integrationIndex = await getEntryCTM(
+        integrationFolder as "integration",
+        "-index",
+        lang.languageCode,
+      );
+
+      let integrations = await getCollectionCTM(
+        integrationFolder as "integration",
+        lang.languageCode,
+      );
+
+      // If draft true in index.md file frontmatter don't include any page related to this page collection in production
+      if (integrationIndex?.data.draft && import.meta.env.PROD) {
+        return [];
+      }
+
+      return integrations.map((integration) => ({
+        params: {
+          lang:
+            lang.languageCode === defaultLanguage && !showDefaultLangInUrl
+              ? undefined
+              : lang.languageCode,
+          single:
+            integration.data?.customSlug ||
+            integration.id
+              .replace(/\.mdx?|\.md/g, "")
+              .split("/")
+              .pop(),
+        },
+        props: {
+          integration,
+        },
+      }));
+    }),
+  );
+
+  return paths.flat();
+}
+
+const { integration } = Astro.props;
+---
+
+<Base {...integration.data}>
+  <PageHeader
+    {...integration.data}
+    description={integration.data.description || integration.data.excerpt}
+  />
+  <IntegrationSingle
+    class="pt-16"
+    content={integration}
+    data-aos="fade-up-sm"
+    data-aos-delay="300"
+  />
+  <CallToAction />
+</Base>

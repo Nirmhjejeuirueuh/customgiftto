@@ -1,0 +1,161 @@
+---
+import type { Section } from "@/types";
+import CustomButton from "../CustomButton.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import AnimatedText from "../widgets/AnimatedText.astro";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+
+// Type for this section data
+type SectionType = Section & {
+  shape?: string;
+  background?: string;
+  mobilePreview?: string;
+  mobileFrame?: string;
+  stats?: {
+    title: string;
+    description: string;
+    avatars: string[];
+  };
+};
+
+type Props = {
+  content?: SectionType;
+};
+
+// Fetching the default content for the this section
+let defaultContent = (
+  await getEntryCTM("sections", "call-to-action", Astro.currentLocale)
+)?.data as SectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let {
+  enable = true,
+  title,
+  background,
+  mobilePreview,
+  mobileFrame,
+  shape,
+  stats,
+  description,
+  button,
+} = actualContent as SectionType;
+
+if (!enable) return;
+---
+
+<section class="call-to-action overflow-hidden">
+  <div class="container">
+    <div
+      class="bg-theme-light relative grid grid-cols-1 overflow-hidden rounded-4xl lg:grid-cols-2">
+      <div class="flex flex-col justify-between px-8 py-8 lg:px-16 lg:py-20">
+        <div class="mb-10">
+          {
+            title && (
+              <AnimatedText
+                class="has-italic-text mb-8 leading-[1.15] font-normal capitalize"
+                tag="h2"
+                delay={0.2}
+                stagger={0.09}
+                content={markdownify(title)}
+              />
+            )
+          }
+          {
+            description && (
+              <p
+                data-aos="fade-down-sm"
+                data-aos-delay="300"
+                set:html={markdownify(description)}
+              />
+            )
+          }
+          {
+            button && button.enable && (
+              <div
+                class="mt-5 md:mt-10"
+                data-aos="fade-down-sm"
+                data-aos-delay="400">
+                <CustomButton class="btn-primary" {...button} />
+              </div>
+            )
+          }
+        </div>
+        <div
+          class="mt-10 flex flex-wrap gap-4 lg:mt-24"
+          data-aos="reveal-anim-down">
+          {stats?.title && <h3 class="h2">{stats.title}</h3>}
+          {
+            stats?.avatars && stats?.avatars.length > 0 && (
+              <div class="flex -space-x-3">
+                {stats?.avatars.map((src) => (
+                  <OptimizedImage
+                    src={src}
+                    alt="user"
+                    class="h-14 w-14 rounded-full border-4 border-white object-cover"
+                  />
+                ))}
+              </div>
+            )
+          }
+
+          {
+            stats?.description && (
+              <p class="mt-2" set:html={markdownify(stats.description)} />
+            )
+          }
+        </div>
+
+        {
+          shape && (
+            <OptimizedImage
+              src={shape}
+              class="pointer-events-none absolute bottom-0 left-0 w-194 select-none"
+            />
+          )
+        }
+      </div>
+      <div
+        class="relative flex flex-col justify-end overflow-hidden pt-10 after:absolute after:bottom-0 after:left-0 after:z-30 after:h-full after:w-full after:bg-linear-to-b after:from-transparent after:from-70% after:to-white md:pt-20">
+        {
+          background && (
+            <OptimizedImage
+              src={background}
+              class="absolute bottom-0 left-0 z-10 h-full w-auto"
+            />
+          )
+        }
+        {
+          mobilePreview && (
+            <div
+              data-aos="reveal-anim-up"
+              class="relative z-20 mx-auto w-full max-w-72 overflow-hidden px-4 pt-4 text-center md:text-start lg:h-156.25 lg:max-w-90">
+              {mobilePreview && (
+                <OptimizedImage
+                  src={mobilePreview}
+                  class="mx-auto w-full lg:w-79.25"
+                />
+              )}
+              {mobileFrame && (
+                <OptimizedImage
+                  src={mobileFrame}
+                  class="translate-x-centered absolute top-0 h-auto w-full"
+                />
+              )}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

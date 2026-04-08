@@ -1,0 +1,37 @@
+{
+  "common": {
+    "readMore": "Lire plus",
+    "category": "Catégorie",
+    "emailPlaceholder": "Adresse e-mail",
+    "paginationNext": "Suivant",
+    "paginationPrevious": "Précédent",
+    "contactDropdownSearch404": "Aucun résultat trouvé",
+    "404Heading": "404 - Page introuvable",
+    "404Description": "Oups, il semble que vous ayez quitté la carte.",
+    "404ButtonLabel": "Retour à l'accueil"
+  },
+  "navigation": {
+    "buttonLabel": "Télécharger"
+  },
+  "contactInfo": {
+    "locationLabel": "Adresse",
+    "location": "2627 Park Street, San Francisco, CA",
+    "phoneLabel": "Téléphone",
+    "phone": "925-465-3762",
+    "emailLabel": "E-mail",
+    "email": "finzo@example.com"
+  },
+  "subscription": {
+    "title": "Rejoignez notre newsletter",
+    "description": "Abonnez-vous pour recevoir les dernières mises à jour et nouveautés de thèmes."
+  },
+  "integration": {
+    "relatedIntegrationSectionTitle": "Vous pourriez être **intéressé par**",
+    "backToIntegration": "Parcourir"
+  },
+  "footerBlock": {
+    "description": "Nous fournissons des solutions fluides pour les PME.",
+    "copyright": "Copyright © 2024 Finzo. Tous droits réservés.",
+    "contactBlockLabel": "Contact"
+  }
+}

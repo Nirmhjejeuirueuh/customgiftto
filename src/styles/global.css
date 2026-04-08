@@ -1,160 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap');
+@import "tailwindcss";
 
-/* ── Reset & Base ── */
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import "./theme.css";
+@plugin "../plugins/fontTailwindPlugin.js";
+
+/* Preline UI */
+@source "../../node_modules/preline/dist/*.js";
+@import "../../node_modules/preline/variants.css";
+
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+@import "./safe.css";
+
+@layer base {
+  @import "./base.css";
 }
 
-:root {
-  --font-primary: 'Figtree', sans-serif;
-  --font-secondary: 'Instrument Serif', serif;
-
-  --color-dark: #1a1a2e;
-  --color-text: #444;
-  --color-text-light: #777;
-  --color-white: #ffffff;
-  --color-primary: #4f46e5;
-  --color-primary-light: #6366f1;
-  --color-primary-dark: #3730a3;
-  --color-bg: #fafbff;
-  --color-bg-section: #f5f6ff;
-  --color-border: #e8e9f0;
-  --color-border-light: #f0f1f5;
-
-  --container-max: 1300px;
-  --header-height: 80px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 24px;
-  --radius-full: 9999px;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-html.lenis, html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-body {
-  font-family: var(--font-primary);
-  color: var(--color-text);
-  background: var(--color-white);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-ul, ol {
-  list-style: none;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-
-/* ── Container ── */
-.container {
-  width: 100%;
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 32px;
-}
-
-/* ── Buttons ── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  padding: 16px 36px;
-  border-radius: var(--radius-full);
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.btn-primary {
-  background: var(--color-primary);
-  color: var(--color-white);
-}
-
-.btn-primary:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
-}
-
-.btn-outline {
-  background: transparent;
-  color: var(--color-dark);
-  border: 1.5px solid var(--color-border);
-}
-
-.btn-outline:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  transform: translateY(-2px);
-}
-
-/* ── Section Common ── */
-.section {
-  padding: 100px 0;
-}
-
-.section-title {
-  font-family: var(--font-primary);
-  font-size: clamp(32px, 4vw, 48px);
-  font-weight: 600;
-  color: var(--color-dark);
-  line-height: 1.25;
-}
-
-.section-title em,
-.section-title i {
-  font-family: var(--font-secondary);
-  font-style: italic;
-  font-weight: 400;
-}
-
-.section-desc {
-  font-size: 16px;
-  color: var(--color-text-light);
-  line-height: 1.7;
-}
-
-/* ── Dashed border util ── */
-.dashed-border {
-  border: 1.5px dashed var(--color-border);
+@layer components {
+  @import "./animation.css";
+  @import "./navigation.css";
+  @import "./components.css";
 }

@@ -1,0 +1,85 @@
+---
+import Icons from "@/helpers/Icons.astro";
+import type { sharedButtonTag } from "@/sections.schema";
+import type { TypeOf } from "astro:schema";
+
+interface Props extends TypeOf<typeof sharedButtonTag> {}
+
+const {
+  label,
+  variant,
+  icon,
+  title,
+  isCreativeHoverEffect,
+  isTextFlipHoverEffect,
+  isMagneticTextFlipHoverEffect,
+} = Astro.props;
+
+// Applcable only if button have the text-flip hover animation
+let dataContent;
+if (isTextFlipHoverEffect || isMagneticTextFlipHoverEffect) {
+  dataContent = variant !== "text" ? label : undefined;
+}
+
+// Check if the label contain "learn more" "read more" type of text that need to add support for accessibility
+let addAriaLabel = false;
+if (
+  label?.toLowerCase().includes("learn more") ||
+  label?.toLowerCase().includes("read more")
+) {
+  addAriaLabel = true;
+}
+
+const iconLeft =
+  icon?.enable && icon?.position === "left" && variant !== "text";
+const iconRight =
+  icon?.enable && icon?.position === "right" && variant !== "text";
+---
+
+{
+  iconLeft && !iconRight && (
+    <Icons class="[font-size:inherit]" icon={icon.name as any} />
+  )
+}
+
+{
+  (isTextFlipHoverEffect || isMagneticTextFlipHoverEffect) &&
+  variant !== "text" ? (
+    <>
+      <span
+        class="text-flip-inner"
+        set:html={label}
+        data-content={dataContent}
+      />
+      {addAriaLabel && <span class="sr-only" set:html={title} />}
+    </>
+  ) : (
+    <>
+      <Fragment set:html={label} />
+      {addAriaLabel && <span class="sr-only" set:html={title} />}
+    </>
+  )
+}
+
+{
+  variant === "text" ? (
+    <span class="icons-wrapper ms-2 -mb-px inline-flex min-h-[.9em] min-w-[1em] items-center justify-center">
+      <span class="icon icon-before flex items-center justify-center">
+        <Icons class="[font-size:inherit]" icon="ArrowUpRight" />
+      </span>
+      <span
+        class="icon icon-after flex items-center justify-center"
+        aria-hidden="true">
+        <Icons class="[font-size:inherit]" icon="ArrowUpRight" />
+      </span>
+    </span>
+  ) : isCreativeHoverEffect ? (
+    <span class="hover-bg" />
+  ) : null
+}
+
+{
+  !iconLeft && iconRight && (
+    <Icons class="[font-size:inherit]" icon={icon.name as any} />
+  )
+}

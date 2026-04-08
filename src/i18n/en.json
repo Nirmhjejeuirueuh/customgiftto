@@ -1,0 +1,37 @@
+{
+  "common": {
+    "readMore": "Read More Details",
+    "category": "Category",
+    "emailPlaceholder": "Email Address",
+    "paginationNext": "Next",
+    "paginationPrevious": "Previous",
+    "contactDropdownSearch404": "No results wewe found",
+    "404Heading": "404 - Page Not Found",
+    "404Description": "Oh dear, it seems like you've ventured off the map.",
+    "404ButtonLabel": "Go Back to Home"
+  },
+  "navigation": {
+    "buttonLabel": "Download"
+  },
+  "contactInfo": {
+    "locationLabel": "Location",
+    "location": "2627 Park Street, San Francisco, CA",
+    "phoneLabel": "Phone Number",
+    "phone": "925-465-3762",
+    "emailLabel": "Email",
+    "email": "finzo@example.com"
+  },
+  "subscription": {
+    "title": "Join Our Newsletter",
+    "description": "Subscribe to our newsletter to receive the latest updates, new theme releases."
+  },
+  "integration": {
+    "relatedIntegrationSectionTitle": "You might be **interested in**",
+    "backToIntegration": "Browse"
+  },
+  "footerBlock": {
+    "description": "We provide seamless solutions to Small and Medium Businesses.",
+    "copyright": "Copyright © 2024 Finzo. All Rights Reserved.",
+    "contactBlockLabel": "Contact"
+  }
+}

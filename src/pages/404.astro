@@ -1,0 +1,30 @@
+---
+import Base from "@/layouts/Base.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import CustomButton from "@/components/CustomButton.astro";
+import CallToAction from "@/components/sections/CallToAction.astro";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+
+const t = await useTranslations(Astro.currentLocale as string);
+---
+
+<Base status={404} title="Page Not Found" disableTagline={true}>
+  <section class="overflow-x-hidden">
+    <div class="container py-5">
+      <div class="relative mx-auto max-w-2xl text-center">
+        <div class="flex flex-col items-center gap-y-10">
+          <OptimizedImage src="/images/404.svg" width={300} />
+          <h1 class="h2 mb-5 text-center" set:html={t("common.404Heading")} />
+        </div>
+        <p set:html={t("common.404Description")} />
+        <CustomButton
+          class="mt-10"
+          url="/"
+          hoverEffect="magnetic-text-flip"
+          label={t("common.404ButtonLabel")}
+        />
+      </div>
+    </div>
+  </section>
+  <CallToAction />
+</Base>

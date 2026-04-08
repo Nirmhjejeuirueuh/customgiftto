@@ -1,0 +1,31 @@
+---
+import Base from "@/layouts/Base.astro";
+import { generatePaths } from "@/lib/utils/i18nUtils";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import handleDraftPage from "@/lib/utils/handleDraftPage";
+import CallToAction from "@/components/sections/CallToAction.astro";
+import FeaturesSection from "@/components/sections/FeaturesGrid.astro";
+import TestimonialSection from "@/components/sections/TestimonialSection.astro";
+import FeaturesSectionTwo from "@/components/sections/FeaturesSectionTwo.astro";
+import FeaturesSectionFour from "@/components/sections/FeaturesSectionFour.astro";
+import FeaturesSectionThree from "@/components/sections/FeaturesRingLayout.astro";
+
+export function getStaticPaths() {
+  return generatePaths();
+}
+
+const entry = await getEntryCTM("features", "-index", Astro.currentLocale);
+
+// Remove drafts pages in production
+const response = handleDraftPage(entry?.data);
+if (response) return response;
+---
+
+<Base {...entry?.data} hasGradientShape={false}>
+  <FeaturesSection />
+  <FeaturesSectionTwo />
+  <FeaturesSectionThree />
+  <FeaturesSectionFour />
+  <TestimonialSection />
+  <CallToAction />
+</Base>

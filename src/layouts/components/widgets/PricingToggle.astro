@@ -1,0 +1,35 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { plans, uniqueId = "group-a", ...rest } = Astro.props;
+---
+
+{
+  plans && plans.enable && plans.list.length > 0 && (
+    <div
+      data-pricing-group={uniqueId}
+      data-highlighter-group
+      class:list={[
+        "bg-theme-light relative flex w-fit flex-wrap rounded-full p-1",
+        Astro.props.class,
+      ]}
+      {...rest}>
+      <span
+        class="pricing-plan-highlighter absolute top-0 left-0 h-full w-1/2 rounded-full border bg-white transition-all duration-300"
+        aria-hidden="true"
+      />
+      {plans.list.map((item: any) => (
+        <button
+          data-plan-btn={item.label.toLowerCase()}
+          class:list={[
+            "pricing-plan-btn [&.active]:text-primary text-dark relative rounded-full px-4 py-1.5 tracking-wider uppercase transition delay-100",
+            {
+              active: item.selected,
+            },
+          ]}
+          set:html={markdownify(item.label)}
+        />
+      ))}
+    </div>
+  )
+}

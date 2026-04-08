@@ -1,0 +1,205 @@
+---
+import type { TypeOf } from "astro:schema";
+import type { Section } from "@/types";
+import VideoModal from "../widgets/VideoModal.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import AnimatedText from "../widgets/AnimatedText.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { heroSectionSchema } from "@/sections.schema";
+import CustomButton from "@/components/CustomButton.astro";
+import HomeBannerCard from "../widgets/HomeBannerCard.astro";
+import AnnouncementBar from "../widgets/AnnouncementBar.astro";
+import HomeBannerCardTwo from "../widgets/HomeBannerCardTwo.astro";
+import OptimizedImage from "@/components/utilities/OptimizedImage.astro";
+import Customers from "./Customers.astro";
+
+// Type for this section data
+type SectionType = Section & NonNullable<TypeOf<typeof heroSectionSchema>>;
+
+type Props = {
+  content?: SectionType;
+};
+
+// Fetching the default content for the this section
+let defaultContent = (
+  await getEntryCTM("sections", "home-banner", Astro.currentLocale)
+)?.data as SectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let {
+  title,
+  announcementBar,
+  imageFrame,
+  leftBlock,
+  rightBlock,
+  description,
+  image,
+  buttons,
+  gradientLeft,
+  gradientRight,
+  lineShape,
+} = actualContent as SectionType;
+
+const videoButton = buttons?.find((button: any) => button.type === "video");
+---
+
+<section class="overflow-hidden">
+  <div class="relative container">
+    <div>
+      <div class="text-20 space-y-10">
+        <AnnouncementBar
+          content={announcementBar}
+          data-aos="reveal-anim-left"
+        />
+
+        {
+          title && (
+            <AnimatedText
+              tag="h1"
+              duration={0.6}
+              stagger={0.07}
+              class="has-italic-text mb-6 text-center text-5xl leading-[1.15] font-normal capitalize md:mb-7 md:text-6xl lg:text-7xl"
+              content={markdownify(title)}
+            />
+          )
+        }
+        {
+          description && (
+            <AnimatedText
+              stagger={0.02}
+              duration={0.4}
+              delay={0.6}
+              content={markdownify(description)}
+              class="mx-auto max-w-xl text-center text-lg/normal"
+            />
+          )
+        }
+      </div>
+
+      <div
+        data-aos="fade-in"
+        data-aos-delay="900"
+        class="has-video-20 [&_svg]:fill-text-default mt-11 flex flex-wrap items-center justify-center gap-5">
+        {
+          buttons?.map((button: any) =>
+            button.type !== "video" ? (
+              <CustomButton {...button} />
+            ) : (
+              <CustomButton
+                {...button}
+                class="video-modal-toggle *:opacity-70"
+                title="Play Video"
+                aria-haspopup="dialog"
+                aria-expanded="false"
+                aria-controls={"#" + button.video.id}
+                data-hs-overlay={"#" + button.video.id}
+                data-hs-overlay-options={`{"emulateScrollbarSpace" : true}`}
+              />
+            ),
+          )
+        }
+      </div>
+    </div>
+
+    <div
+      class="20 mx-auto mt-12 flex w-full max-w-305 flex-col items-start justify-center gap-y-10 md:mt-24 md:flex-row md:justify-start md:gap-7 lg:justify-center lg:gap-14">
+      <HomeBannerCard
+        content={leftBlock}
+        data-aos="reveal-anim-up"
+        data-aos-duration="900"
+        data-aos-offset="0"
+        class="flex w-full flex-col items-center justify-center rounded-lg bg-linear-to-b from-white to-transparent px-4 py-8 text-center max-md:order-1 md:mt-36 md:w-auto md:items-start md:text-start lg:w-1/3 lg:max-w-sm lg:rounded-4xl lg:px-7 lg:py-12"
+      />
+      {
+        image && (
+          <div
+            data-aos="reveal-anim-down"
+            data-aos-offset="0"
+            data-aos-duration="900"
+            class="relative mx-auto -mb-20 w-full max-w-72 overflow-hidden px-4 pt-4 text-center after:absolute after:top-0 after:left-0 after:h-full after:w-full after:bg-linear-to-b after:from-transparent after:from-70% after:to-white after:to-95% md:text-start lg:h-156.25 lg:max-w-90 after:lg:from-80% after:lg:to-90%">
+            {image && (
+              <OptimizedImage src={image} class="mx-auto w-full lg:w-79.25" />
+            )}
+            {imageFrame && (
+              <OptimizedImage
+                src={imageFrame}
+                class="translate-x-centered absolute top-0 h-auto w-full"
+              />
+            )}
+          </div>
+        )
+      }
+      <HomeBannerCardTwo
+        data-aos="reveal-anim-up"
+        data-aos-duration="900"
+        data-aos-offset="0"
+        content={rightBlock}
+        class="flex w-full flex-col items-center justify-start rounded-lg bg-linear-to-b from-white to-transparent px-4 py-6 text-center md:mt-16 md:w-auto md:items-start md:text-start lg:w-1/3 lg:max-w-sm lg:rounded-4xl lg:px-8 lg:pb-42"
+      />
+    </div>
+
+    <!-- Gradient Shapes -->
+    {
+      gradientLeft && (
+        <OptimizedImage
+          class="max-md:translate-x-centered absolute bottom-0 -z-10 h-128 opacity-70 md:top-[100px] md:-left-25 md:h-225"
+          src={gradientLeft}
+        />
+      )
+    }
+
+    {
+      gradientRight && (
+        <OptimizedImage
+          class="absolute -right-37.5 -z-10 hidden h-175 w-auto md:top-[200px] md:block"
+          src={gradientRight}
+        />
+      )
+    }
+
+    {
+      videoButton?.enable && (
+        <VideoModal
+          video={{
+            id: videoButton.video?.id,
+            src: videoButton.video?.src,
+            provider: videoButton.video?.provider,
+          }}
+        />
+      )
+    }
+
+    <!-- Line Shapes -->
+    {
+      lineShape && (
+        <OptimizedImage
+          class="absolute top-[30%] -left-36 -z-10 h-100 w-212.5 rotate-[-40deg] opacity-15 md:top-[-300px] md:left-[-550px] md:h-300 md:opacity-5"
+          alt="Vector"
+          src={lineShape}
+        />
+      )
+    }
+
+    <!-- Line Shapes -->
+    {
+      lineShape && (
+        <OptimizedImage
+          class="absolute top-[30%] -right-40 -z-10 h-100 w-212.5 rotate-60 opacity-15 md:-top-36 md:-right-134 md:h-280 md:opacity-5"
+          alt="Vector"
+          src={lineShape}
+        />
+      )
+    }
+  </div>
+  <Customers tag="div" class="mx-auto max-w-5xl pt-20" data-aos="fade-up-sm" />
+</section>

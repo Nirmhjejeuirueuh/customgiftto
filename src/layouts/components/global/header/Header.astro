@@ -1,0 +1,225 @@
+---
+import type { NavigationLink } from "@/types";
+import Logo from "@/components/global/Logo.astro";
+import { useTranslations } from "@/lib/utils/i18nUtils";
+import { sortByWeight } from "@/lib/utils/sortFunctions";
+import CustomButton from "@/components/CustomButton.astro";
+import { filteredEnabled } from "@/lib/utils/filteredEnabled";
+import config from ".astro/config.generated.json" with { type: "json" };
+import NavMenuItem from "@/layouts/components/global/header/MenuItem.astro";
+import NavToggleBtn from "@/layouts/components/global/header/NavToggleBtn.astro";
+import LanguageSwitcher from "@/layouts/components/global/header/LanguageSwitcher.astro";
+
+const t = await useTranslations(Astro.currentLocale as string);
+let main = t("main") as NavigationLink[];
+main = filteredEnabled(main);
+
+// Sort menus by weight
+main = sortByWeight(main) as NavigationLink[];
+
+const { stickyHeader, navigationButton } = config.settings;
+---
+
+<header
+  class:list={[
+    "header group/header mt-5 transform",
+    { "sticky-header": stickyHeader },
+  ]}>
+  <div class="relative container">
+    <nav
+      class="hs-dropdown relative flex items-center justify-between [--auto-close:inside] [--gpu-acceleration:false] [--strategy:absolute] lg:[--strategy:static]">
+      <Logo />
+
+      <ul
+        id="nav-menu"
+        class="navbar hs-dropdown-menu hs-dropdown-open:flex hs-dropdown-open:mt-2! max-lg:absolute max-lg:transform-none! lg:transform-none!">
+        {main.map((menu) => <NavMenuItem menu={menu} />)}
+
+        {/* Language Switcher For Small Devices */}
+        {
+          config.settings.multilingual.enable && (
+            <li class="max-lg:px-4 max-lg:py-2 lg:hidden" role="menuitem">
+              <LanguageSwitcher />
+            </li>
+          )
+        }
+        {
+          navigationButton.enable && (
+            <li class="max-lg:px-4 max-lg:py-2 lg:hidden" role="menuitem">
+              {navigationButton.enable && (
+                <CustomButton
+                  hoverEffect="text-flip"
+                  variant="fill"
+                  {...navigationButton}
+                  label={navigationButton.label || t("navigation.buttonLabel")}
+                  class="btn-primary"
+                />
+              )}
+            </li>
+          )
+        }
+      </ul>
+
+      {/* Navigation Button For Large Devices */}
+      {
+        (navigationButton.enable || config.settings.multilingual.enable) && (
+          <div class="hidden gap-3.5 max-lg:ms-auto max-lg:me-4 lg:flex lg:items-center">
+            {config.settings.multilingual.enable && <LanguageSwitcher />}
+            {navigationButton.enable && (
+              <CustomButton
+                hoverEffect="text-flip"
+                variant="fill"
+                {...navigationButton}
+                label={navigationButton.label || t("navigation.buttonLabel")}
+                class="btn-primary"
+              />
+            )}
+          </div>
+        )
+      }
+      <NavToggleBtn />
+    </nav>
+  </div>
+  <script>
+    import "@/plugins/preline/dropdown";
+
+    function stickyHeader(): void {
+      const header = document.querySelector(
+        ".sticky-header",
+      ) as HTMLElement | null;
+      if (!header) return;
+
+      let prevScrollPos = window.scrollY;
+      let ticking = false;
+
+      // Initial state
+      if (prevScrollPos > 0) {
+        header.classList.add("scroll-up");
+      }
+
+      const updateHeader = () => {
+        const currentScrollPos = Math.max(0, window.scrollY); // Prevent negative values from elastic scrolling
+
+        // Only update if scroll position actually changed
+        if (currentScrollPos === prevScrollPos) {
+          ticking = false;
+          return;
+        }
+
+        if (currentScrollPos === 0) {
+          header.classList.remove("scroll-up", "scroll-down");
+        } else if (prevScrollPos > currentScrollPos) {
+          // Scrolling up
+          header.classList.remove("scroll-down");
+          header.classList.add("scroll-up");
+        } else if (prevScrollPos < currentScrollPos) {
+          // Scrolling down
+          header.classList.remove("scroll-up");
+          header.classList.add("scroll-down");
+        }
+
+        prevScrollPos = currentScrollPos;
+        ticking = false;
+      };
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!ticking) {
+            window.requestAnimationFrame(updateHeader);
+            ticking = true;
+          }
+        },
+        { passive: true },
+      );
+    }
+
+    stickyHeader();
+  </script>
+</header>
+
+{
+  Astro.props.hasGradientShape && (
+    <>
+      <svg
+        class="pointer-events-none absolute top-0 left-1/2 -z-10 mx-auto h-auto w-full max-w-[1920px] -translate-x-1/2 select-none"
+        height="846"
+        viewBox="0 0 1920 846"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          opacity="0.05"
+          d="M2301 185.661C2355.59 155.032 2174.28 125.071 2124.72 61.5221C2124.72 61.5221 2123.52 59.6082 2121.74 60.4748C2119.95 61.3415 2120.87 63.4763 2120.87 63.4763C2142.22 112.329 2195.34 140.607 2241.09 163.975C1991.67 156.4 1895.49 -41.1391 1742.21 -274.837C1710.57 -323.076 1683.74 -296.066 1674.42 -265.778C1660.94 -192.054 1687.99 -108.491 1696.06 -34.9129C1708.35 55.5006 1735.24 159.242 1736.22 250.739C1736.55 281.619 1719.51 292.189 1698.04 263.655C1657.26 209.552 1616.92 137.467 1580.05 80.436C1559.37 47.8928 1540.29 13.1145 1514.77 -16.8146C1497.51 -39.8593 1466.53 -35.7026 1465.04 -4.61317C1466.74 84.7834 1566.47 331.892 1510.96 420.616C1439.02 535.401 1242.42 417.881 1185.78 330.153C1185.42 329.591 1184.85 329.195 1184.19 329.05C1183.54 328.906 1182.86 329.024 1182.29 329.38C1181.48 329.886 1180.91 330.691 1180.7 331.619C1180.49 332.546 1180.65 333.52 1181.16 334.325C1247.56 451.291 1498.86 577.288 1547.65 401.349C1573.56 307.703 1512.09 158.04 1501.08 44.2943C1500.48 38.1474 1499.4 18.7509 1511.81 40.6076C1564.48 133.621 1615.34 228.794 1682.05 313.076C1745.27 388.545 1783.67 319.037 1779.2 249.041C1778.56 118.153 1742.18 -36.8832 1731.66 -168.261C1729.98 -189.146 1736.1 -196.463 1749.57 -175.95C1880.29 23.3717 2018.39 196.802 2229.92 180.517C2184.97 203.359 2141.78 244.322 2134.22 296.244C2134.22 296.244 2133.63 298.397 2135.3 299.17C2136.97 299.942 2138.11 298.122 2138.11 298.122C2182.96 244.346 2257.53 210.066 2301 185.661ZM1499.71 -3.63294C1500.07 -4.20017 1499.89 -4.08574 1499.71 -3.63294V-3.63294ZM1734.3 299.083C1734.87 299.188 1734.75 299.265 1734.3 299.083V299.083Z"
+          fill="#B1B1B1"
+        />
+        <path
+          opacity="0.05"
+          d="M240.244 -888.761C191.576 -959.815 172.754 -707.676 91.7448 -631.98C91.7448 -631.98 89.2693 -630.098 90.6759 -627.758C92.0825 -625.418 94.8956 -626.936 94.8956 -626.936C159.224 -662.186 191.461 -738.442 217.872 -804.01C238.08 -461.282 -20.8264 -305.248 -322.282 -66.5461C-384.508 -17.2734 -344.203 16.1881 -301.555 25.245C-198.873 34.6713 -87.6776 -12.6421 12.1618 -32.7299C134.555 -60.6596 273.422 -110.221 398.685 -122.791C440.963 -127.027 457.537 -104.973 421.068 -72.0514C351.928 -9.52831 258.092 54.5924 184.459 112.1C142.4 144.436 97.0803 174.848 59.1963 213.494C29.7336 239.975 39.2285 281.913 82.0151 280.141C204.313 266.85 530.712 99.8755 659.105 165.074C825.226 249.576 688.289 533.398 575.015 621.775C574.29 622.342 573.817 623.173 573.699 624.086C573.581 624.999 573.827 625.922 574.384 626.655C575.176 627.697 576.35 628.382 577.647 628.559C578.944 628.736 580.258 628.39 581.3 627.598C733.444 522.264 875.288 162.439 628.203 117.152C496.696 93.1228 299.14 195.715 144.617 224.756C136.267 226.329 109.819 230.189 138.249 210.505C259.252 126.915 383.438 45.5556 490.754 -56.2073C586.421 -152.093 486.461 -196.191 391.088 -181.481C211.802 -164.551 3.80682 -95.6793 -174.939 -65.1514C-203.354 -60.2926 -214.131 -67.7848 -187.674 -88.7594C69.4405 -292.338 290.168 -502.851 241.912 -790.729C278.726 -731.928 340.157 -677.765 412.236 -673.78C412.236 -673.78 415.26 -673.227 416.113 -675.611C416.967 -677.995 414.333 -679.341 414.333 -679.341C335.14 -734.201 279.018 -832.193 240.244 -888.761ZM79.1071 232.516C78.2851 232.087 78.4643 232.322 79.1071 232.516V232.516ZM465.171 -126.085C465.245 -126.885 465.364 -126.728 465.171 -126.085V-126.085Z"
+          fill="#B1B1B1"
+        />
+        <g opacity="0.4" filter="url(#filter0_f_16956_5247)">
+          <ellipse
+            cx="1489.9"
+            cy="183.934"
+            rx="164.692"
+            ry="333.232"
+            transform="rotate(180 1489.9 183.934)"
+            fill="var(--color-tertiary)"
+          />
+        </g>
+        <g opacity="0.1" filter="url(#filter1_f_16956_5247)">
+          <ellipse
+            cx="610.644"
+            cy="240.882"
+            rx="241.266"
+            ry="348.624"
+            transform="rotate(180 610.644 240.882)"
+            fill="var(--color-secondary)"
+          />
+        </g>
+        <defs>
+          <filter
+            id="filter0_f_16956_5247"
+            x="1171.29"
+            y="-303.216"
+            width="637.219"
+            height="974.299"
+            filterUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feBlend
+              mode="normal"
+              in="SourceGraphic"
+              in2="BackgroundImageFix"
+              result="shape"
+            />
+            <feGaussianBlur
+              stdDeviation="76.9589"
+              result="effect1_foregroundBlur_16956_5247"
+            />
+          </filter>
+          <filter
+            id="filter1_f_16956_5247"
+            x="215.46"
+            y="-261.659"
+            width="790.368"
+            height="1005.08"
+            filterUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feBlend
+              mode="normal"
+              in="SourceGraphic"
+              in2="BackgroundImageFix"
+              result="shape"
+            />
+            <feGaussianBlur
+              stdDeviation="76.9589"
+              result="effect1_foregroundBlur_16956_5247"
+            />
+          </filter>
+        </defs>
+      </svg>
+    </>
+  )
+}

@@ -1,0 +1,155 @@
+---
+import type { Section } from "@/types";
+import type { z } from "astro:schema";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { statsSectionSchema } from "@/sections.schema";
+import AnimatedText from "../widgets/AnimatedText.astro";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import Icons from "@/helpers/Icons.astro";
+import AnimatedNumber from "../widgets/AnimatedNumber.astro";
+import SquareElem from "../widgets/SquareElem.astro";
+
+// Type
+type SectionType = Section & z.infer<typeof statsSectionSchema>;
+type Props = {
+  content?: SectionType;
+  hideButton?: boolean;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "fun-fact", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+let { enable = true, title, description, list } = actualContent as SectionType;
+
+if (!enable) return;
+---
+
+<section class="overflow-hidden">
+  <div class="container">
+    <div class="mx-auto max-w-5xl space-y-16">
+      {
+        title && (
+          <div class="mx-auto flex justify-center gap-4 text-center max-lg:flex-wrap lg:justify-between lg:text-start">
+            <AnimatedText
+              tag="h2"
+              class="has-italic-text capitalize lg:max-w-xl"
+              delay={0.2}
+              stagger={0.09}
+              content={markdownify(title)}
+            />
+
+            {description && (
+              <AnimatedText
+                tag="p"
+                delay={0.5}
+                duration={0.7}
+                stagger={0.0009}
+                content={markdownify(description)}
+              />
+            )}
+          </div>
+        )
+      }
+      {
+        list && (
+          <div class="grid gap-14 py-4 md:grid-cols-2 lg:grid-cols-3">
+            {list.map((item) => (
+              <div class="relative flex min-h-68.5 flex-col justify-between gap-6 bg-white p-5">
+                {item.bgPattern && (
+                  <OptimizedImage
+                    src={item.bgPattern}
+                    alt="pattern"
+                    class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                  />
+                )}
+
+                <div>
+                  {item.title && (
+                    <AnimatedNumber class="h2 mb-2" content={item.title} />
+                  )}
+
+                  {item.icons && item.icons.length > 0 && (
+                    <div class="mb-4 flex gap-1">
+                      {item.icons.map((ic) => (
+                        <Icons
+                          icon={ic as any}
+                          class="text-green h-5 w-5 fill-current text-yellow-400"
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {item.description && (
+                    <p
+                      class="mt-auto"
+                      set:html={markdownify(item.description)}
+                    />
+                  )}
+                </div>
+
+                {item.buttons && item.buttons.length > 0 && (
+                  <div class="mt-auto flex gap-3">
+                    {item.buttons
+                      .filter((b) => b.enable)
+                      .map((b) => (
+                        <a
+                          href={b.url}
+                          target={b.target || "_blank"}
+                          rel={b.rel || "noopener noreferrer"}
+                          class="inline-block">
+                          {b.image && (
+                            <OptimizedImage
+                              src={b.image}
+                              alt="download"
+                              width={150}
+                              height={48}
+                              class="z-10 h-12 w-auto"
+                            />
+                          )}
+                        </a>
+                      ))}
+                  </div>
+                )}
+
+                {item.caption && <p set:html={markdownify(item.caption)} />}
+                {item.avatars && item.avatars.length > 0 && (
+                  <div class="flex -space-x-3">
+                    {item.avatars.map((src) => (
+                      <OptimizedImage
+                        src={src}
+                        alt="user"
+                        width={40}
+                        height={40}
+                        class="h-12 w-12 rounded-full border-4 border-white object-cover"
+                      />
+                    ))}
+                  </div>
+                )}
+
+                <div class="pointer-events-none absolute inset-0 size-full select-none">
+                  <span class="translate-x-centered absolute -top-1 h-1 w-[115%] border-b border-dashed border-black/50" />
+                  <span class="translate-x-centered absolute -bottom-px h-1 w-[115%] border-b border-dashed border-black/50" />
+                  <span class="translate-y-centered absolute -left-px h-[115%] w-1 border-s border-dashed border-black/50" />
+                  <span class="translate-y-centered absolute -right-1 h-[115%] w-1 border-s border-dashed border-black/50" />
+                  <SquareElem class="absolute -top-3.5 -left-3.5 fill-white" />
+                  <SquareElem class="absolute -top-3.5 -right-3.5 fill-white" />
+                  <SquareElem class="absolute -bottom-3.5 -left-3.5 fill-white" />
+                  <SquareElem class="absolute -right-3.5 -bottom-3.5 fill-white" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

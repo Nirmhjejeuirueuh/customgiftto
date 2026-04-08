@@ -1,0 +1,165 @@
+---
+import type { Section } from "@/types";
+import type { TypeOf } from "astro:schema";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import AnimatedText from "../widgets/AnimatedText.astro";
+import type { featuresThreeSchema } from "@/sections.schema";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+
+// Type for this section data
+type SectionType = Section & TypeOf<typeof featuresThreeSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Fetching the default content for the this section
+let defaultContent = (
+  await getEntryCTM("sections", "features-ring-layout", Astro.currentLocale)
+)?.data as SectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let {
+  enable = true,
+  title,
+  image,
+  imageFrame,
+  description,
+  list,
+} = actualContent as SectionType;
+
+if (!enable) return;
+---
+
+<section>
+  <div class="container space-y-10 md:space-y-16">
+    {
+      title && (
+        <div class="mx-auto space-y-4 text-center max-lg:max-w-lg">
+          <h2 class="has-italic-text capitalize">
+            <AnimatedText
+              delay={0.2}
+              stagger={0.09}
+              content={markdownify(title)}
+            />
+          </h2>
+
+          {description && (
+            <AnimatedText
+              tag="p"
+              delay={0.5}
+              duration={0.7}
+              stagger={0.0009}
+              content={markdownify(description)}
+            />
+          )}
+        </div>
+      )
+    }
+    {
+      list && (
+        <div class="relative flex flex-col">
+          {/* <!-- Items wrapper --> */}
+          <div class="flex flex-wrap justify-center gap-10 max-xl:order-2 max-lg:mt-10 xl:mb-0">
+            {list.slice(0, 6).map((item, index) => (
+              <div
+                data-aos="fade-up-sm"
+                data-aos-duration="900"
+                data-aos-delay={index * 100}
+                data-aos-offset="0"
+                class:list={[
+                  "z-10 flex w-150 items-center gap-5 md:gap-10 xl:absolute xl:max-w-80",
+                  {
+                    "top-[10%] right-[-3%] xl:right-[6.5%]": index === 0,
+                    "top-[10%] left-[-3%] flex-row-reverse text-end xl:left-[6.5%]":
+                      index === 1,
+                    "xl:translate-y-centered left-[-1.2%] xl:flex-row-reverse xl:text-end":
+                      index === 2,
+                    "xl:translate-y-centered right-[-1.2%] max-xl:flex-row-reverse max-xl:text-end":
+                      index === 3,
+                    "bottom-[10%] left-[2%] xl:flex-row-reverse xl:text-end":
+                      index === 4,
+                    "right-[2%] bottom-[10%] max-xl:flex-row-reverse max-xl:text-end":
+                      index === 5,
+                  },
+                ]}>
+                {/* <!-- Dot indicator --> */}
+                <span class="inline-block h-4 min-w-4 rounded-full border border-green-400 bg-green-100 xl:border-black/10 xl:bg-white" />
+                <div class="space-y-2">
+                  {item.title && (
+                    <h3
+                      class="h6 font-medium"
+                      set:html={markdownify(item.title)}
+                    />
+                  )}
+                  {item.description && (
+                    <p set:html={markdownify(item.description)} />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* <!-- Decorative circle SVG --> */}
+          <svg
+            class="translate-x-centered absolute inset-0 -bottom-40 hidden animate-spin rounded-full [animation-duration:5s] lg:size-[550px] xl:block xl:size-[700px]"
+            width="725"
+            height="725"
+            viewBox="0 0 725 725"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <circle
+              opacity="0.5"
+              cx="362.5"
+              cy="362.5"
+              r="362"
+              transform="rotate(180 362.5 362.5)"
+              stroke="url(#paint0_linear_16887_2802)"
+              stroke-miterlimit="3.07467"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-dasharray="8 8"
+            />
+            <defs>
+              <linearGradient
+                id="paint0_linear_16887_2802"
+                x1="362.5"
+                y1="0.5"
+                x2="362.5"
+                y2="724.5"
+                gradientUnits="userSpaceOnUse">
+                <stop stop-color="#686882" />
+                <stop offset="1" stop-color="#16161C" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          {/* <!-- Image container --> */}
+          {image && (
+            <div
+              data-aos="reveal-anim-down"
+              class="relative mx-auto w-full max-w-[30%] overflow-hidden px-4 pt-4 text-center after:absolute after:inset-x-0 after:top-0 after:size-full after:bg-linear-to-b after:from-transparent after:from-70% after:to-white after:to-95% max-xl:order-1 md:text-start lg:h-156.25 lg:max-w-90 after:lg:from-80% after:lg:to-95%">
+              <OptimizedImage src={image} class="mx-auto w-full lg:w-79.25" />
+              {imageFrame && (
+                <OptimizedImage
+                  src={imageFrame}
+                  class="translate-x-centered absolute top-0 h-auto w-full"
+                />
+              )}
+            </div>
+          )}
+        </div>
+      )
+    }
+  </div>
+</section>

@@ -1,0 +1,49 @@
+---
+// src/layouts/components/widgets/AnnouncementBar.astro
+import Icons from "@/helpers/Icons.astro";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+
+const {
+  content: { url = "", label = "", icon = "", avatars = [] },
+  ...rest
+} = Astro.props;
+---
+
+<div
+  class="group relative mx-auto mb-5 max-w-fit overflow-hidden rounded-full border p-px"
+  {...rest}>
+  <div
+    class="translate-y-centered to-primary absolute left-1/2 -z-10 h-6 w-1/2 origin-left rotate-90 animate-spin rounded-full bg-linear-to-b from-white [animation-duration:10000ms]">
+  </div>
+  {
+    url && (
+      <div class="flex flex-wrap items-center justify-center gap-y-2 rounded-full bg-white">
+        <div class="flex items-center *:not-first:-ms-3">
+          {avatars?.map((avatar: any) => (
+            <OptimizedImage
+              src={avatar}
+              width={40}
+              height={40}
+              class="h-9 w-9 rounded-full border-3 object-cover"
+            />
+          ))}
+        </div>
+        <div class="text-text-default mx-3 flex items-center rounded-full py-px text-sm font-normal md:text-base">
+          {icon && (
+            <Icons
+              icon={icon as any}
+              class="me-2.5 fill-yellow-400 text-yellow-400"
+            />
+          )}
+          {markdownify(label)}
+        </div>
+        <a
+          title={markdownify(label) as string}
+          class="absolute inset-0 size-full"
+          href={url}
+        />
+      </div>
+    )
+  }
+</div>

@@ -1,0 +1,105 @@
+---
+import { z } from "astro:content";
+import type { Section } from "@/types";
+import Icons from "@/helpers/Icons.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import AnimatedText from "../widgets/AnimatedText.astro";
+import overrideObjects from "@/lib/utils/overrideObjects";
+import type { featuresSectionSchema } from "@/sections.schema";
+
+// Type for this section data
+type SectionType = Section & z.infer<typeof featuresSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Fetching the default content for the this section
+let defaultContent = (
+  await getEntryCTM("sections", "features-section-two", Astro.currentLocale)
+)?.data as SectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let { enable = true, title, description, list } = actualContent as SectionType;
+
+if (!enable) return;
+---
+
+<section>
+  <div class="container space-y-10 md:space-y-16">
+    {
+      title && (
+        <div class="mx-auto space-y-4 text-center">
+          <h2 class="has-italic-text capitalize">
+            <AnimatedText
+              delay={0.2}
+              stagger={0.09}
+              content={markdownify(title)}
+            />
+          </h2>
+
+          {description && (
+            <AnimatedText
+              tag="p"
+              delay={0.5}
+              duration={0.7}
+              stagger={0.0009}
+              content={markdownify(description)}
+            />
+          )}
+        </div>
+      )
+    }
+    {
+      list && (
+        <div class="grid justify-items-center gap-y-10 md:grid-cols-2 lg:grid-cols-3">
+          {list.map((item, index) => (
+            <div
+              data-aos-delay={(index + 200) * 150}
+              data-aos="fade-left-sm"
+              class="w-fit space-y-4 border-l border-dashed border-black/30 px-10">
+              {item.icon && (
+                <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border">
+                  <svg width="0" height="0" class="absolute">
+                    <defs>
+                      <linearGradient
+                        id="paint0_linear_16965_13074"
+                        x1="14.8748"
+                        y1="1.41699"
+                        x2="14.8748"
+                        y2="26.917"
+                        gradientUnits="userSpaceOnUse">
+                        <stop stop-color="var(--color-primary)" />
+                        <stop offset="1" stop-color="white" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+
+                  <Icons
+                    icon={item.icon as any}
+                    class="mx-auto block h-8 w-8 text-blue-500 [&_path]:stroke-[url(#paint0_linear_16965_13074)]"
+                  />
+                </div>
+              )}
+              {item.title && (
+                <h3 class="h5" set:html={markdownify(item.title)} />
+              )}
+              {item.description && (
+                <p set:html={markdownify(item.description)} />
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

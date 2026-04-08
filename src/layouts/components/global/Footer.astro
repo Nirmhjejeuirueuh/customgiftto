@@ -1,0 +1,213 @@
+---
+import social from "@/config/social.json";
+import type { NavigationLink } from "@/types";
+import Logo from "@/components/global/Logo.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import SocialComponent from "@/components/social/Social.astro";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import config from ".astro/config.generated.json" with { type: "json" };
+import { useTranslations, getLocaleUrlCTM } from "@/lib/utils/i18nUtils";
+import SubscriptionForm from "@/components/widgets/Subscription.astro";
+
+const t = await useTranslations(Astro.currentLocale as string);
+let footerMenus = t("footer") as {
+  label: string;
+  list: NavigationLink[];
+}[];
+
+let { copyright, downloadButtons, footerDescription, subscription, brandName } =
+  config.settings;
+
+footerDescription = footerDescription || t("footerBlock.description");
+const copyrightText = copyright.text || t("footerBlock.copyright");
+---
+
+<footer class="relative">
+  <div class="container space-y-8 md:space-y-16">
+    <div class="grid gap-x-2 gap-y-px lg:grid-cols-12">
+      <div
+        class="bg-primary/5 flex flex-col justify-between rounded-3xl px-4 py-6 md:p-8 lg:col-span-4 xl:col-span-3">
+        <div class="space-y-4">
+          <Logo />
+          {footerDescription && <p set:html={markdownify(footerDescription)} />}
+        </div>
+        <div class="mt-10 flex gap-2">
+          {
+            downloadButtons?.map((b) => (
+              <a
+                href={b.url}
+                target={b.target || "_blank"}
+                rel={b.rel || "noopener noreferrer"}
+                class="inline-block">
+                {b.image && (
+                  <OptimizedImage
+                    src={b.image}
+                    alt="download"
+                    width={150}
+                    height={48}
+                    class="z-10 w-full"
+                  />
+                )}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div
+        class="bg-primary/5 grid gap-y-5 rounded-3xl px-4 py-6 md:gap-y-10 md:p-8 lg:col-span-8 xl:col-span-9 xl:grid-cols-12">
+        {
+          subscription && subscription.enable && (
+            <SubscriptionForm class="col-span-4" {...subscription} />
+          )
+        }
+        <div
+          class="col-span-8 grid gap-x-4 gap-y-5 md:grid-cols-3 md:gap-y-10 xl:ps-28">
+          {
+            footerMenus?.map((menu) => (
+              <div>
+                {menu.label && (
+                  <h3
+                    class="text-dark mb-4 text-xl md:mb-6"
+                    set:html={markdownify(menu.label)}
+                  />
+                )}
+                <ul class="flex flex-col gap-y-1.5">
+                  {menu.list?.map((menu) => (
+                    <li>
+                      <a
+                        class="has-underline-anim inline-block py-px text-inherit"
+                        href={getLocaleUrlCTM(
+                          menu.url as string,
+                          Astro.currentLocale,
+                        )}>
+                        {menu.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+          <div>
+            {
+              t("footerBlock.contactBlockLabel") && (
+                <h3
+                  class="text-dark mb-4 text-xl md:mb-6"
+                  set:html={t("footerBlock.contactBlockLabel")}
+                />
+              )
+            }
+
+            <ul class="flex flex-col gap-3">
+              <li>
+                <span
+                  class="mb-1.5 inline-block text-sm/none font-medium tracking-widest text-black">
+                  {t("contactInfo.locationLabel") || "Location"}:
+                </span>
+                <span class="text-base-sm block md:text-base">
+                  {t("contactInfo.location")}
+                </span>
+              </li>
+              <li>
+                <span
+                  class="mb-1.5 inline-block text-sm/none font-medium tracking-widest text-black">
+                  {t("contactInfo.phoneLabel") || "Phone Number"}:
+                </span>
+                <span class="text-base-sm block md:text-base">
+                  {t("contactInfo.phone")}
+                </span>
+              </li>
+              <li>
+                <span
+                  class="mb-1.5 inline-block text-sm/none font-medium tracking-widest text-black">
+                  {t("contactInfo.emailLabel") || "Email"}:
+                </span>
+                <span class="text-base-sm block md:text-base">
+                  {t("contactInfo.email")}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brand Name -->
+  <div
+    class="relative after:absolute after:inset-0 after:h-full after:bg-linear-to-b after:from-transparent after:to-white md:mt-16">
+    {
+      brandName && (
+        <div class="overflow-hidden text-[clamp(1rem,90%,25rem)]">
+          <div
+            class="text-primary responsive-brand-text mx-auto text-center leading-[0.8] font-bold uppercase max-md:py-5"
+            set:html={brandName}
+          />
+          <div class="pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-[calc(70%+1.5rem)] w-full">
+            <div class="absolute inset-0 z-70 mask-[linear-gradient(rgba(0,0,0,0),rgba(0,0,0,1)_10%,rgba(0,0,0,1)_30%,rgba(0,0,0,0)_40%)] backdrop-blur-[1px]" />
+            <div class="absolute inset-0 z-60 mask-[linear-gradient(rgba(0,0,0,0)_10%,rgba(0,0,0,1)_20%,rgba(0,0,0,1)_40%,rgba(0,0,0,0)_50%)] backdrop-blur-[2px]" />
+            <div class="absolute inset-0 z-50 mask-[linear-gradient(rgba(0,0,0,0)_15%,rgba(0,0,0,1)_30%,rgba(0,0,0,1)_50%,rgba(0,0,0,0)_60%)] backdrop-blur-xs" />
+            <div class="absolute inset-0 z-40 mask-[linear-gradient(rgba(0,0,0,0)_20%,rgba(0,0,0,1)_40%,rgba(0,0,0,1)_60%,rgba(0,0,0,0)_70%)] backdrop-blur-sm" />
+            <div class="absolute inset-0 z-30 mask-[linear-gradient(rgba(0,0,0,0)_40%,rgba(0,0,0,1)_60%,rgba(0,0,0,1)_80%,rgba(0,0,0,0)_90%)] backdrop-blur-lg" />
+            <div class="absolute inset-0 z-20 mask-[linear-gradient(rgba(0,0,0,0)_60%,rgba(0,0,0,1)_80%)] backdrop-blur-[32px]" />{" "}
+            <div class="absolute inset-0 z-10 mask-[linear-gradient(rgba(0,0,0,0)_70%,rgba(0,0,0,1)_100%)] backdrop-blur-[52px]" />
+          </div>
+        </div>
+      )
+    }
+    <div
+      class="sm:translate-x-centered text-text-default z-10 container flex w-full flex-wrap justify-between gap-x-8 gap-y-3 pb-6 sm:absolute sm:bottom-0 sm:py-8">
+      {
+        config.settings.copyright && config.settings.copyright.enable && (
+          <div
+            class="prose-styles z-10 sm:opacity-80"
+            set:html={markdownify(copyrightText, true)}
+          />
+        )
+      }
+      <SocialComponent
+        layout="minimal"
+        class="*:h-6 *:w-6"
+        linkType="follow"
+        list={social.main.filter((social) => social.enable)}
+      />
+    </div>
+  </div>
+
+  <script>
+    // Detect if the page has a call to action section and add a class to the footer accordingly.
+    // This approach adds a section gap between the last section of main tag & footer.
+
+    const ctaSection = document.querySelector(".cta-section");
+    const footer = document.querySelector("footer") as HTMLElement;
+
+    if (!ctaSection) {
+      footer.classList.add("has-call-to-action");
+    }
+
+    function fitText(el: any, { minSize = 12, maxSize = 500 } = {}) {
+      const parent = el.parentElement;
+
+      function resize() {
+        // Reset first so scrollWidth is measured at default size
+        el.style.fontSize = `${maxSize}px`;
+
+        // Calculate scale based on parent width vs. text width
+        const scale = parent.clientWidth / el.scrollWidth;
+
+        // Apply new size (with limits)
+        const newSize = Math.max(minSize, Math.min(maxSize, maxSize * scale));
+        el.style.fontSize = `${newSize}px`;
+      }
+
+      window.addEventListener("resize", resize);
+      resize();
+    }
+
+    // Usage
+    document
+      .querySelectorAll(".responsive-brand-text")
+      .forEach((el) => fitText(el, { minSize: 20, maxSize: 450 }));
+  </script>
+</footer>

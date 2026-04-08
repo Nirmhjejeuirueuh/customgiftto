@@ -1,0 +1,101 @@
+---
+import type { MarqueeConfig, Section } from "@/types";
+import { markdownify } from "@/lib/utils/textConverter";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+import { getCollectionCTM, getEntryCTM } from "@/lib/contentParser.astro";
+import config from ".astro/config.generated.json" with { type: "json" };
+import AnimatedText from "../widgets/AnimatedText.astro";
+import CustomButton from "../CustomButton.astro";
+
+// Type for this section data
+type SectionType = Section & {
+  list: {
+    title: string;
+    description: string;
+  }[];
+  marquee: MarqueeConfig;
+};
+type Props = {
+  content?: SectionType;
+};
+
+// Fetching the default content for the this section
+let defaultContent = (
+  await getEntryCTM("sections", "integration-section", Astro.currentLocale)
+)?.data as SectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let { title, button, description } = actualContent as SectionType;
+
+let integrations = await getCollectionCTM(
+  config?.settings?.integrationFolder as "integration",
+  Astro.currentLocale,
+);
+
+// Slice the integrations array to display only 14 items
+integrations = integrations.slice(0, 12);
+---
+
+<section class="overflow-hidden">
+  <div class="container space-y-10 md:space-y-16">
+    {
+      title && (
+        <div class="space-y-4 text-center">
+          <AnimatedText
+            class="has-italic-text capitalize"
+            tag="h3"
+            delay={0.2}
+            stagger={0.09}
+            content={markdownify(title)}
+          />
+
+          {description && (
+            <AnimatedText
+              tag="p"
+              delay={0.5}
+              duration={0.7}
+              stagger={0.009}
+              content={markdownify(description)}
+            />
+          )}
+        </div>
+      )
+    }
+    <div class="space-y-16 text-center">
+      <div
+        data-aos="fade-up-sm"
+        data-aos-delay="300"
+        class="mx-auto grid max-w-4xl grid-cols-4 grid-rows-2 place-items-center gap-x-14 gap-y-10 sm:grid-cols-6">
+        {
+          integrations.map((item, index) => (
+            <OptimizedImage
+              src={item.data.image as any}
+              class:list={[
+                "h-auto w-16 justify-items-center overflow-hidden rounded-xl bg-white drop-shadow-2xl drop-shadow-black/5 lg:w-[calc(100%-2.5rem)]",
+                index <= 5 && "lg:translate-x-20",
+                index === 5 && "lg:invisible",
+              ]}
+              alt={item.data.title}
+            />
+          ))
+        }
+      </div>
+      {
+        button && (
+          <div data-aos="fade-up-sm" data-aos-delay="400">
+            <CustomButton {...button} />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

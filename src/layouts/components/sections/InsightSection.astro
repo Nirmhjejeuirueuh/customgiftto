@@ -1,0 +1,129 @@
+---
+import type { Section } from "@/types";
+import type { TypeOf } from "astro:schema";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import Icons from "@/helpers/Icons.astro";
+import CustomButton from "../CustomButton.astro";
+import AnimatedText from "../widgets/AnimatedText.astro";
+import AnimatedNumber from "../widgets/AnimatedNumber.astro";
+import type { insightsSectionSchema } from "@/sections.schema";
+
+// Type for this section data
+type SectionType = Section & TypeOf<typeof insightsSectionSchema>;
+type Props = {
+  content?: SectionType;
+};
+
+// Fetching the default content for the this section
+let defaultContent = (
+  await getEntryCTM("sections", "insight-section", Astro.currentLocale)
+)?.data as SectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let {
+  enable = true,
+  title,
+  description,
+  button,
+  list,
+} = actualContent as SectionType;
+
+if (!enable) return;
+---
+
+<section>
+  <div class="bg-theme-light py-20 md:py-32">
+    <div class="container">
+      <div
+        class="grid-cols-1 space-y-10 md:grid lg:grid-cols-2 xl:grid-cols-3 xl:space-y-0">
+        {
+          title && (
+            <div class="mx-auto flex justify-center text-center max-md:flex-wrap md:gap-x-20 md:text-start lg:mt-10 lg:block">
+              <h2 class="has-italic-text mb-4 capitalize">
+                <AnimatedText
+                  delay={0.2}
+                  stagger={0.09}
+                  content={markdownify(title)}
+                />
+              </h2>
+
+              <div>
+                {description && (
+                  <AnimatedText
+                    class="mb-11 lg:mb-11"
+                    tag="p"
+                    delay={0.5}
+                    duration={0.7}
+                    stagger={0.0009}
+                    content={markdownify(description)}
+                  />
+                )}
+
+                {button && (
+                  <div data-aos="fade-up-sm" data-aos-delay="300">
+                    <CustomButton {...button} />
+                  </div>
+                )}
+              </div>
+            </div>
+          )
+        }
+        {
+          list && (
+            <div class="space-y-10 gap-x-8 md:grid md:grid-cols-2 *:even:md:mt-12 xl:col-span-2 xl:ps-48">
+              {list.map((item, index) => (
+                <div
+                  data-aos-delay="400"
+                  data-aos={
+                    index % 2 === 0 ? "reveal-anim-down" : "reveal-anim-up"
+                  }
+                  class="flex flex-col space-y-4 rounded-t-4xl bg-linear-to-b from-white to-transparent px-8 pt-12">
+                  <div class="mb-10 flex items-center gap-3">
+                    {item.icon && (
+                      <div class="bg-secondary/10 flex h-14 w-14 items-center justify-center rounded-full">
+                        <Icons
+                          icon={item.icon as any}
+                          class="text-secondary mx-auto block h-6 w-6"
+                        />
+                      </div>
+                    )}
+                    {item.title && <span set:html={markdownify(item.title)} />}
+                  </div>
+                  {item.stats && (
+                    <h3 class="mb-4">
+                      <AnimatedNumber
+                        class="text-dark h2"
+                        content={{ ...item.stats, prependValue: "" }}
+                      />
+                      {item.stats?.prependValue && (
+                        <span
+                          class="h4 text-text-default"
+                          set:html={markdownify(item.stats.prependValue)}
+                        />
+                      )}
+                    </h3>
+                  )}
+
+                  {item.description && (
+                    <p set:html={markdownify(item.description)} />
+                  )}
+                </div>
+              ))}
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

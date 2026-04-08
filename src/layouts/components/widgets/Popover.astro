@@ -1,0 +1,37 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+
+const { enable, title, description } = Astro.props.content || {};
+
+if (!enable) return;
+---
+
+<div class="hs-tooltip inline-block [--trigger:hover]">
+  <button
+    type="button"
+    class="hs-tooltip-toggle inline-flex size-6 items-center justify-center rounded-full text-black opacity-25 transition-colors hover:bg-gray-50">
+    <svg
+      class="size-4"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M12 16v-4"></path>
+      <path d="M12 8h.01"></path>
+    </svg>
+  </button>
+  <div
+    class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible invisible absolute z-50 inline-block w-64 max-w-xs rounded-lg border bg-white text-start opacity-0 shadow-lg transition-opacity"
+    role="tooltip">
+    <div class="p-4">
+      <h4 class="mb-2 text-sm font-medium">{title}</h4>
+      <p class="text-sm" set:html={markdownify(description || "")} />
+    </div>
+  </div>
+</div>

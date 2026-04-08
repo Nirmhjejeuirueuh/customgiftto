@@ -1,0 +1,81 @@
+/* AOS Animations */
+[data-aos] {
+  opacity: 1;
+  transform: translateY(0);
+  transition: none;
+  will-change: transform;
+}
+
+[data-aos="fade-up-sm"] {
+  transform: translate3d(0, 30px, 0);
+}
+
+[data-aos="fade-down-sm"] {
+  transform: translate3d(0, -30px, 0);
+}
+
+[data-aos="fade-right-sm"] {
+  transform: translate3d(-30px, 0, 0);
+}
+
+[data-aos="fade-left-sm"] {
+  transform: translate3d(30px, 0, 0);
+}
+
+[data-aos="fade-up-sm"] {
+  transform: translate3d(0, 30px, 0);
+}
+
+[data-aos="fade-down-sm"] {
+  transform: translate3d(0, -30px, 0);
+}
+
+[data-aos="fade-right-sm"] {
+  transform: translate3d(-30px, 0, 0);
+}
+
+[data-aos="fade-left-sm"] {
+  transform: translate3d(30px, 0, 0);
+}
+
+[data-aos="zoom-in-sm"] {
+  transform: scale(0.95);
+}
+
+[data-aos*="reveal-anim"] {
+  filter: blur(2px);
+  transition-property: filter, opacity, transform, clip-path;
+  &.aos-animate {
+    filter: blur(0px);
+    clip-path: inset(0 0 0 0);
+  }
+
+  &[data-aos*="-left"].aos-animate,
+  &[data-aos*="-right"].aos-animate {
+    @apply translate-x-0;
+  }
+  &[data-aos*="-top"].aos-animate,
+  &[data-aos*="-bottom"].aos-animate {
+    transform: translateY(0);
+  }
+}
+
+[data-aos="reveal-anim-right"] {
+  clip-path: inset(0 0 0 100%);
+  transform: translateX(5%);
+}
+
+[data-aos="reveal-anim-left"] {
+  clip-path: inset(0 100% 0 0);
+  transform: translateX(-5%);
+}
+
+[data-aos="reveal-anim-up"] {
+  clip-path: inset(100% 0 0 0);
+  transform: translateY(5%);
+}
+
+[data-aos="reveal-anim-down"] {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(-5%);
+}

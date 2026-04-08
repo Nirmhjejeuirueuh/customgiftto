@@ -1,0 +1,49 @@
+---
+import { markdownify } from "@/lib/utils/textConverter";
+import AnimatedText from "./widgets/AnimatedText.astro";
+
+const {
+  textAnimation = true,
+  title,
+  description,
+  class: ClassName = "pt-16",
+  tag: Element = "section",
+} = Astro.props;
+---
+
+<Element class:list={[ClassName]}>
+  <div class="container">
+    <div class="space-y-4 text-center">
+      {
+        title && textAnimation ? (
+          <AnimatedText
+            tag="h1"
+            duration={0.6}
+            stagger={0.07}
+            class="has-italic-text text-h2 capitalize"
+            content={markdownify(title)}
+          />
+        ) : (
+          <h1
+            class="has-italic-text text-h2 capitalize"
+            set:html={markdownify(title)}
+          />
+        )
+      }
+
+      {
+        description && textAnimation ? (
+          <AnimatedText
+            tag="p"
+            stagger={0.015}
+            duration={0.4}
+            delay={0.2}
+            content={markdownify(description)}
+          />
+        ) : (
+          <p set:html={markdownify(description)} />
+        )
+      }
+    </div>
+  </div>
+</Element>

@@ -1,0 +1,324 @@
+---
+import { type TypeOf } from "astro:schema";
+import type { Section } from "@/types";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+import type { pricingSectionSchema } from "@/sections.schema";
+import PricingCard from "@/layouts/components/cards/PricingCard.astro";
+import PricingComparisonSection from "@/components/sections/PricingComparison.astro";
+import AnimatedText from "../widgets/AnimatedText.astro";
+import PricingToggle from "../widgets/PricingToggle.astro";
+import OptimizedImage from "../utilities/OptimizedImage.astro";
+
+export type SectionType = Section & TypeOf<typeof pricingSectionSchema>;
+
+type Props = {
+  content?: SectionType;
+  layout?: "comparison" | "regular";
+  class?: string;
+};
+
+// Fetching the default content for the this section
+let defaultContent = (
+  await getEntryCTM("sections", "pricing-section", Astro.currentLocale)
+)?.data as SectionType;
+
+// Enables content customization (e.g., title, description) with a fallback to 'defaultContent' if not provided.
+// The 'content' prop should match the structure of 'defaultContent'.
+// Allows using this section with different content across multiple pages.
+// If 'content' is missing, 'defaultContent' will be used.
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+// Extracting required values from 'content' object
+let {
+  enable = true,
+  title,
+  description,
+  pricingComparisonTitle,
+  pricingComparisonTogglerLabel,
+  plans,
+  comparison,
+  list,
+} = actualContent as SectionType;
+
+const { class: className, layout = "regular" } = Astro.props;
+const selectedPlanIndex = list.findIndex((item) => item.featured);
+
+if (!enable) return;
+---
+
+<section class:list={[className]}>
+  {
+    layout === "regular" ? (
+      <div class="relative container space-y-12 md:space-y-16">
+        <div class="flex flex-wrap items-center justify-center gap-y-8 md:justify-between">
+          {title && (
+            <div class="space-y-4 text-center md:text-start">
+              <h2 class="has-italic-text capitalize">
+                <AnimatedText
+                  delay={0.2}
+                  stagger={0.09}
+                  content={markdownify(title)}
+                />
+              </h2>
+              {description && (
+                <AnimatedText
+                  delay={0.4}
+                  stagger={0.03}
+                  content={markdownify(description)}
+                />
+              )}
+            </div>
+          )}
+          <PricingToggle data-aos="fade-up-sm" plans={plans} />
+        </div>
+
+        <div class="pointer-events-none absolute inset-0 hidden size-full opacity-20 blur-3xl select-none md:block">
+          <OptimizedImage
+            class="pointer-events-none absolute top-1/2 left-0 -z-10 select-none md:top-20 md:left-20"
+            src="/images/pricing-blob.svg"
+          />
+          <OptimizedImage
+            class="pointer-events-none absolute top-1/2 -z-10 opacity-80 select-none lg:top-20 lg:right-20"
+            src="/images/pricing-blob-2.svg"
+          />
+        </div>
+        {list?.length > 0 && (
+          <div class="grid grid-cols-1 grid-rows-1 gap-x-8 gap-y-6 md:grid-cols-2 lg:grid-cols-3 xl:gap-x-10">
+            {list.map((item, index) => (
+              <PricingCard
+                content={{
+                  ...item,
+                  index,
+                  plans,
+                  layout,
+                  comparison,
+                }}
+                data-aos="fade-right-sm"
+                data-aos-delay={(index + 2.5) * 100}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    ) : (
+      <PricingComparisonSection
+        content={{
+          pricingComparisonTitle,
+          pricingComparisonTogglerLabel,
+          selectedPlanIndex,
+          comparison,
+          list,
+          plans,
+        }}
+      />
+    )
+  }
+  <script>
+    interface HighlighterOptions {
+      selector: string;
+      highlightElementSelector: string;
+      triggerEvent?: "hover" | "click";
+      activeClass?: string;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Helper function to reset numbers to zero for animation
+      const addZero = (originalValue: string): string => {
+        return originalValue.replace(/\d/g, "0");
+      };
+
+      // Initialize pricing toggles for each group
+      const initPricingToggles = (): void => {
+        // Find all pricing toggle groups
+        const toggleGroups = document.querySelectorAll("[data-pricing-group]");
+
+        toggleGroups.forEach((group) => {
+          const groupElement = group.closest("section") as HTMLElement;
+
+          // Get all toggle buttons within this group
+          const priceToggleBtns = groupElement.querySelectorAll(
+            "[data-plan-btn]",
+          ) as NodeListOf<HTMLButtonElement>;
+
+          // Function to reset plans within this group
+          const resetPlans = (selectedPlan: string): void => {
+            groupElement
+              .querySelectorAll("[data-plan]")
+              .forEach((planElement) => {
+                const element = planElement as HTMLElement;
+                const priceElement = element.querySelector(
+                  "[data-count]",
+                ) as HTMLElement | null;
+
+                if (priceElement) {
+                  priceElement.textContent = addZero(
+                    priceElement.dataset.count || "",
+                  );
+                }
+
+                if (element.dataset.plan !== selectedPlan) {
+                  element.classList.add("hidden");
+                  element.classList.remove("active");
+                }
+              });
+          };
+
+          // Function to activate selected plan within this group
+          const activatePlan = (selectedPlan: string): void => {
+            groupElement
+              .querySelectorAll(`[data-plan="${selectedPlan}"]`)
+              .forEach((planElement) => {
+                const element = planElement as HTMLElement;
+                const priceElement = element.querySelector(
+                  "[data-count]",
+                ) as HTMLElement | null;
+
+                if (priceElement) {
+                  priceElement.textContent = priceElement.dataset.count || "";
+                }
+
+                element.classList.remove("hidden");
+                element.classList.add("active");
+              });
+          };
+
+          // Attach event listeners to toggle buttons in this group
+          priceToggleBtns.forEach((button) => {
+            button.addEventListener("click", () => {
+              const triggeredPlan = button.dataset.planBtn;
+
+              if (!triggeredPlan) return;
+
+              resetPlans(triggeredPlan);
+              activatePlan(triggeredPlan);
+            });
+          });
+        });
+      };
+
+      // Initialize all pricing toggle groups
+      initPricingToggles();
+
+      // Dynamic Highlighter function - supports multiple groups
+      function createDynamicHighlighter({
+        selector,
+        highlightElementSelector,
+        triggerEvent = "hover",
+        activeClass = "active",
+      }: HighlighterOptions): void {
+        // Find all highlighter groups
+        const highlighterGroups = document.querySelectorAll(
+          "[data-highlighter-group]",
+        );
+
+        highlighterGroups.forEach((group) => {
+          const container = group as HTMLElement;
+          const highlightElement = container.querySelector<HTMLElement>(
+            highlightElementSelector,
+          );
+
+          if (!highlightElement) {
+            console.error(
+              `Highlight element not found in group for selector: ${highlightElementSelector}`,
+            );
+            return;
+          }
+
+          // Get elements only within this group
+          const elements = container.querySelectorAll<HTMLElement>(selector);
+
+          let lastActiveElement: HTMLElement | null = null;
+
+          const moveHighlight = (target: HTMLElement) => {
+            const containerRect = container.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+
+            const left = targetRect.left - containerRect.left;
+            const top = targetRect.top - containerRect.top;
+            const width = targetRect.width;
+            const height = targetRect.height;
+
+            highlightElement.style.left = `${left}px`;
+            highlightElement.style.top = `${top}px`;
+            highlightElement.style.width = `${width}px`;
+            highlightElement.style.height = `${height}px`;
+            highlightElement.style.display = "block";
+
+            lastActiveElement = target;
+          };
+
+          const setInitialActive = () => {
+            const activeElement = container.querySelector<HTMLElement>(
+              `${selector}.${activeClass}`,
+            );
+            if (activeElement) {
+              moveHighlight(activeElement);
+              lastActiveElement = activeElement;
+            } else {
+              highlightElement.style.display = "none";
+            }
+          };
+
+          const toggleActiveClass = (el: HTMLElement) => {
+            elements.forEach((element) => {
+              element.classList.remove(activeClass);
+            });
+            el.classList.add(activeClass);
+          };
+
+          const handleEvent = (el: HTMLElement) => {
+            if (triggerEvent === "hover") {
+              el.addEventListener("mouseenter", () => {
+                moveHighlight(el);
+                toggleActiveClass(el);
+              });
+              el.addEventListener("mouseleave", () => {
+                if (lastActiveElement) moveHighlight(lastActiveElement);
+              });
+            } else if (triggerEvent === "click") {
+              el.addEventListener("click", () => {
+                moveHighlight(el);
+                toggleActiveClass(el);
+              });
+            }
+          };
+
+          elements.forEach(handleEvent);
+          setInitialActive();
+
+          const recalculateOnResize = () => {
+            if (lastActiveElement) {
+              moveHighlight(lastActiveElement);
+            }
+          };
+
+          window.addEventListener("resize", recalculateOnResize);
+        });
+      }
+
+      // Initialize highlighter
+      createDynamicHighlighter({
+        selector: ".pricing-plan-btn",
+        highlightElementSelector: ".pricing-plan-highlighter",
+        triggerEvent: "click",
+        activeClass: "active",
+      });
+    });
+  </script>
+  <script>
+    // Initialize Preline components
+    if (typeof window !== "undefined") {
+      import("preline/preline").then((module) => {
+        const { HSStaticMethods } = module;
+        if (HSStaticMethods?.autoInit) {
+          HSStaticMethods.autoInit();
+        }
+      });
+    }
+  </script>
+</section>

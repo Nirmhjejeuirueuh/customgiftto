@@ -1,0 +1,72 @@
+---
+import type { Section } from "@/types";
+import Icons from "@/helpers/Icons.astro";
+import { getEntryCTM } from "@/lib/contentParser.astro";
+import { markdownify } from "@/lib/utils/textConverter";
+import overrideObjects from "@/lib/utils/overrideObjects.ts";
+
+// Type
+type SectionType = Section & {
+  list: Array<{
+    icon: string;
+    title: string;
+    description: string;
+  }>;
+};
+type Props = {
+  content?: SectionType;
+  hideButton?: boolean;
+};
+
+// Default content fetch
+let defaultContent = (
+  await getEntryCTM("sections", "fun-fact-two", Astro.currentLocale)
+)?.data as SectionType;
+
+let actualContent = overrideObjects(
+  { ...defaultContent },
+  Astro.props.content,
+) as SectionType;
+
+let { enable = true, list } = actualContent as SectionType;
+
+if (!enable) return;
+---
+
+<section class="overflow-hidden">
+  <div class="container">
+    {
+      list && (
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {list.map((item, index) => (
+            <div
+              data-aos="fade-right-sm"
+              data-aos-delay={(index + 1) * 100}
+              class:list={[
+                "from-theme-light space-y-4 rounded-4xl bg-linear-to-b px-6 py-12",
+                index % 2 === 0 && "lg:mt-10",
+              ]}>
+              {item.icon && (
+                <div class="bg-secondary/10 mb-6 flex h-15 w-15 items-center justify-center rounded-full">
+                  <Icons
+                    icon={item.icon as any}
+                    class="text-secondary mx-auto block h-8 w-8"
+                  />
+                </div>
+              )}
+              {item.title && (
+                <h3
+                  class="h2 mb-4 font-medium"
+                  set:html={markdownify(item.title)}
+                />
+              )}
+              {item.description && (
+                <p set:html={markdownify(item.description)} />
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
