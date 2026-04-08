@@ -19,26 +19,25 @@ function convertTomlToJson() {
     }
 
     fs.writeFileSync(outputFilePath, JSON.stringify(parsed, null, 2), "utf8");
-    // console.log(`[toml-watcher] ✅ Generated ${outputFilePath}`);
+    console.log(`[toml-watcher] ✅ Generated ${outputFilePath}`);
   } catch (err) {
     console.error("[toml-watcher] ❌ Error converting TOML:", err.message);
   }
 }
 
 /**
- * Run immediately if JSON is missing
+ * Initial run
  */
-if (!fs.existsSync(outputFilePath)) {
-  // console.log("[toml-watcher] JSON not found. Generating...");
-  convertTomlToJson();
-}
+console.log("[toml-watcher] Initial generation...");
+convertTomlToJson();
 
 /**
  * Watch TOML file for changes
  */
+console.log(`[toml-watcher] 👀 Watching ${configFilePath} for changes...`);
 fs.watch(configFilePath, (eventType) => {
   if (eventType === "change") {
-    // console.log("[toml-watcher] TOML file changed. Regenerating...");
+    console.log("[toml-watcher] TOML file changed. Regenerating...");
     convertTomlToJson();
   }
 });
